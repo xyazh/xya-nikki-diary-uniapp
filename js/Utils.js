@@ -6,9 +6,12 @@ import {
 const Utils = {};
 
 const version = "1.0.0";
+const _ON_REACH_BOTTOM = {};
 
 let _SWITCH_PAGE = null;
 let _UPDATE_SET_PASSWORD = null;
+
+
 
 Utils.version = version;
 Utils.read_nikki = {};
@@ -31,6 +34,19 @@ Utils.copyObj = function(obj) {
 	return new_obj;
 }
 
+Utils.registerReachBottom = function(key, fuc) {
+	_ON_REACH_BOTTOM[key] = fuc;
+}
+
+Utils.unRegisterReachBottom = function(key) {
+	delete _ON_REACH_BOTTOM[key];
+}
+
+Utils.onReachBottom = function() {
+	for (let key in _ON_REACH_BOTTOM) {
+		_ON_REACH_BOTTOM[key]();
+	}
+}
 
 Utils.registerSwitchPage = function(fn) {
 	_SWITCH_PAGE = fn;
@@ -206,6 +222,14 @@ Utils.countDay = function(last, frist) {
 	let start = new Date(frist[0], frist[1] - 1, frist[2]);
 	let end = new Date(last[0], last[1] - 1, last[2]);
 	return Math.floor((end - start) / (24 * 60 * 60 * 1000));
+}
+
+Utils.clearObj = function(obj) {
+	for (const key in obj) {
+		if (obj.hasOwnProperty(key)) {
+			delete obj[key];
+		}
+	}
 }
 
 export default Utils;

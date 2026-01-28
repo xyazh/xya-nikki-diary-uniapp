@@ -1,0 +1,137 @@
+import Utils from '@/js/Utils.js'
+
+const ROOT_CONTENT = `
+<h5>RootNode</h5>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;根节点是所有其他节点的最上级节点，无法修改和删除。但是可以将根节点隐藏不显示在列表中。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可以通过编辑节点的html代码来实现各种各样的效果。<br>
+`
+
+const ViArNode = function(data) {
+	this.title = data.title;
+	this.date = data.date;
+	this.creat_date = data.creat_date;
+	this.id = data.id;
+	this.content = data.content;
+	this.tags = {};
+	this.parent = data.parent;
+	this.childs = data.childs;
+	this.links = data.links;
+	this.meta = data.meta;
+
+	for (let tag of data.tags) {
+		this.tags[tag] = Utils.invertColor(Utils.md5(tag));
+	}
+
+	this.getRenderNode = function() {
+		var result = {
+			time: this.getTime(),
+			title: this.title,
+			meta: this.meta,
+			id: this.id,
+			tags: this.tags,
+		};
+		return result;
+	}
+
+	this.update = function(parent, title, content, tag_list, links, meta) {
+		if (typeof parent == "string") {
+			this.parent = parent;
+		} else if (parent instanceof ViArNode) {
+			this.parent = parent.id;
+		}
+		this.title = title;
+		this.content = content;
+		Utils.clearObj(this.tags);
+		for (var tag of tag_list) {
+			this.tags[tag] = Utils.invertColor(Utils.md5(tag));
+		}
+		this.links.clear();
+		for (var link of links) {
+			if (typeof link == "string") {
+				this.links.add(link);
+			} else if (link instanceof ViArNode) {
+				this.links.add(link.id);
+			}
+		}
+		this.meta = meta;
+	}
+
+	this.getTime = function() {
+		return Utils.formatTimestamp(this.date);
+	}
+
+	this.save = function() {
+		var save_data = {
+			title: this.title,
+			date: this.date,
+			creat_date: this.creat_date,
+			id: this.id,
+			content: this.content,
+			tags: Object.keys(this.tags),
+			parent: this.parent,
+			childs: Array.from(this.childs),
+			links: Array.from(this.links),
+			meta: this.meta
+		}
+		return save_data;
+	}
+
+	return this;
+}
+
+ViArNode.newRootNode = function() {
+	var data = {
+		title: "root",
+		date: 0,
+		creat_date: 0,
+		id: "root",
+		content: ROOT_CONTENT,
+		tags: ["root"],
+		parent: null,
+		childs: new Set(),
+		links: new Set(),
+		meta: "根节点"
+	}
+	return new ViArNode(data);
+}
+
+ViArNode.newNode = function(title, content, tag_list, parent, links, meta) {
+	var date = Date.parse(new Date());
+	var data = {
+		title: title,
+		date: date,
+		creat_date: date,
+		id: Utils.createUUID(),
+		content: content,
+		tags: tag_list,
+		parent: parent.id,
+		childs: new Set(),
+		links: new Set(),
+		meta: meta
+	}
+	var node = new ViArNode(data);
+	parent.childs.add(node.id);
+	for (var link of links) {
+		node.links.add(link.id);
+		link.links.add(node.id);
+	}
+	return node;
+}
+
+ViArNode.loadNode = function(save_data) {
+	var data = {
+		title: save_data.title,
+		date: save_data.date,
+		creat_date: save_data.creat_date,
+		id: save_data.id,
+		content: save_data.id == "root" ? ROOT_CONTENT : save_data.content,
+		tags: save_data.tags,
+		parent: save_data.parent,
+		childs: new Set(save_data.childs),
+		links: new Set(save_data.links),
+		meta: save_data.meta
+	}
+	return new ViArNode(data);
+}
+
+export default ViArNode;

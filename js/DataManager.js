@@ -227,7 +227,17 @@ class DataManager {
 			return;
 		}
 		for (var fuc of DataManager.ON_IMPORT) {
-			fuc(data);
+			try {
+				fuc(data);
+			} catch (e) {
+				console.error("导入数据发生异常:", e);
+				console.error(fuc);
+				console.error(data);
+				uni.showToast({
+					title: "导入数据发生异常:" + e,
+					icon: "none"
+				});
+			}
 		}
 	}
 

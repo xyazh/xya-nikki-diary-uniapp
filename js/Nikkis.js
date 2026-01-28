@@ -1,12 +1,15 @@
 import DataManager from '@/js/DataManager.js'
 import Utils from '@/js/Utils.js'
 import {
+	ref,
 	reactive,
 	shallowReactive
 } from "vue"
 
-export const NIKKI_LIST = shallowReactive([]);
-export const NIKKI_LIST_SRH = reactive([]);
+export const COUNT_TEXT = ref(0);
+export const NIKKI_LIST = reactive([]);
+export const RENDER_NIKKI_LIST = reactive([]);
+export const SRH_ON = ref(false);
 const DM = new DataManager("nikkis");
 
 
@@ -15,17 +18,19 @@ class Nikkis {
 		DM.load();
 		var nikki_list = DM.get("nikki_list", []);
 		NIKKI_LIST.push(...nikki_list);
-		Nikkis.sort();
+		Nikkis.sort()
+			.countAllText();
 	}
 
 	static importFile(data) {
 		let out_nikki = data.out_nikki;
 		Nikkis.reset(out_nikki)
-		.sort()
-		.save();
+			.sort()
+			.countAllText()
+			.save();
 	}
-	
-	static exportFile(){
+
+	static exportFile() {
 		const data = {};
 		data.out_nikki = NIKKI_LIST;
 		return data;
@@ -33,7 +38,7 @@ class Nikkis {
 
 	static passwordChange() {
 		Nikkis.sort()
-		.save();
+			.save();
 	}
 
 	static sort() {
@@ -42,9 +47,7 @@ class Nikkis {
 	}
 
 	static add(nikki) {
-		Nikkis.del(nikki.id);
-		NIKKI_LIST.push(nikki);
-		return Nikkis;
+		return Nikkis.insert(nikki);
 	}
 
 	static reset(nikkis) {
@@ -58,16 +61,37 @@ class Nikkis {
 
 	static clear() {
 		NIKKI_LIST.length = 0;
+		COUNT_TEXT.value = 0;
 		return Nikkis;
 	}
 
 	static insert(nikki) {
-		Nikkis.del(nikki.id);
-		if (nikki.text.length > 0) {
+		let old_nikki = Nikkis.get(nikki.id);
+		if (old_nikki == null) {
 			NIKKI_LIST.push(nikki);
+		} else {
+			Object.assign(old_nikki, nikki);
 		}
 		Nikkis.sort();
 		return Nikkis;
+	}
+
+	static has(id) {
+		for (var i = 0; i < NIKKI_LIST.length; i++) {
+			if (NIKKI_LIST[i].id === id) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	static get(id) {
+		for (var i = 0; i < NIKKI_LIST.length; i++) {
+			if (NIKKI_LIST[i].id === id) {
+				return NIKKI_LIST[i];
+			}
+		}
+		return null;
 	}
 
 	static del(id) {
@@ -79,8 +103,8 @@ class Nikkis {
 		}
 		return Nikkis;
 	}
-	
-	static getNikkiFromId(id){
+
+	static getNikkiFromId(id) {
 		for (var i = 0; i < NIKKI_LIST.length; i++) {
 			if (NIKKI_LIST[i].id === id) {
 				return NIKKI_LIST[i];
@@ -112,12 +136,77 @@ class Nikkis {
 			.save();
 	}
 
+	static srh(keyword) {
+		var result = [];
+		if (keyword == undefined || keyword == "" || keyword == null) {
+			return result;
+		}
+		var times = Utils.parseTimeString(keyword);
+		var keywords = Utils.splitKeyword(keyword);
+		for (var item of NIKKI_LIST) {
+			var n = 0;
+			if (times != null) {
+				if (item.year == times.year) {
+					n += 500;
+				}
+				if (item.month == times.month) {
+					n += 500;
+				}
+				if (item.day == times.day) {
+					n += 500;
+				}
+				if (item.hours == times.hour) {
+					n += 500;
+				}
+				if (item.minu == times.minute) {
+					n += 500;
+				}
+			}
+			if (keyword == item.week) {
+				n += 500;
+			}
+			for (keyword of keywords) {
+				if (item.text.includes(keyword)) {
+					n += 1;
+				}
+			}
+			if (n <= 0) {
+				continue;
+			}
+			result.push({
+				item: item,
+				score: n,
+			});
+		}
+		result.sort((a, b) => b.score - a.score);
+		RENDER_NIKKI_LIST.length = 0;
+		for(let nikki_warp of result){
+			RENDER_NIKKI_LIST.push(nikki_warp.item);
+		}
+	}
+
 	static getNikkiList() {
 		return NIKKI_LIST;
 	}
-	
-	static getNikkiSrhList() {
-		return NIKKI_LIST_SRH;
+
+	static getRenderNikkiList() {
+		return RENDER_NIKKI_LIST;
+	}
+
+	static getCountText() {
+		return COUNT_TEXT;
+	}
+	static getSrhON() {
+		return SRH_ON;
+	}
+
+	static countAllText() {
+		let n = 0;
+		for (let nikki of NIKKI_LIST) {
+			n += nikki.text.length;
+		}
+		COUNT_TEXT.value = n;
+		return Nikkis;
 	}
 }
 

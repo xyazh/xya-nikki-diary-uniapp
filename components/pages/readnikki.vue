@@ -19,7 +19,7 @@
 				<!-- 右侧内容 -->
 				<view class="content-box">
 					<text class="year" v-if="Utils.read_nikki.year !== CURRENT_YEAR">{{Utils.read_nikki.year}}</text>
-					<text class="text">
+					<text class="read-nikki-text">
 						{{Utils.read_nikki.text}}
 					</text>
 					<text
@@ -72,6 +72,7 @@
 		height: 110rpx;
 		background-color: #77aaff;
 		box-shadow: 0 4rpx 6rpx rgba(0, 0, 0, 0.2);
+		z-index: 4;
 	}
 
 	.diary-read-length-box {
@@ -141,7 +142,7 @@
 		color: $dis-text-color;
 	}
 
-	.text {
+	.read-nikki-text {
 		font-size: 30rpx;
 		color: #333;
 		line-height: 40rpx;

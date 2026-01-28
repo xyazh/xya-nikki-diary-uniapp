@@ -13,6 +13,7 @@
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
+		"onReachBottomDistance": 1000,
 		"app-plus": {
 			"bounce": "none"
 		}

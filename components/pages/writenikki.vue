@@ -79,6 +79,7 @@
 				} else if (tn.text == "") {
 					NIKKIS.del(tn.id)
 					.sort()
+					.countAllText()
 					.save();
 					this.tn.is_new = true;
 					Utils.switchPage("nikki", "日记");
@@ -86,6 +87,7 @@
 				}
 				NIKKIS.add(Utils.copyObj(this.tn))
 					.sort()
+					.countAllText()
 					.save();
 				this.tn.is_new = true;
 				this.tn.text = "";
@@ -132,6 +134,7 @@
 		height: 110rpx;
 		background-color: #77aaff;
 		box-shadow: 0 4rpx 6rpx rgba(0, 0, 0, 0.2);
+		z-index: 4;
 	}
 
 	/* 输入框 */

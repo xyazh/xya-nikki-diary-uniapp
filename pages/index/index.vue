@@ -60,10 +60,10 @@
 	import readnikki from '@/components/pages/readnikki.vue'
 	import writenikki from '@/components/pages/writenikki.vue'
 	import tekoki from '@/components/pages/tekoki.vue'
+	import viar from '@/components/pages/viar.vue'
 	import setpassword from '@/components/pages/setpassword.vue'
 	import settings from '@/components/pages/settings.vue'
 	import about from '@/components/pages/about.vue';
-
 
 	import Utils from '@/js/Utils.js';
 	import DataManager from '@/js/DataManager';
@@ -91,7 +91,7 @@
 		},
 		{
 			title: "故事集",
-			key: "home",
+			key: "viar",
 			icon: "/static/icon/ls2.png"
 		},
 		{
@@ -138,6 +138,7 @@
 					readnikki,
 					writenikki,
 					tekoki,
+					viar,
 					setpassword,
 					settings,
 					about
@@ -150,6 +151,7 @@
 			readnikki,
 			writenikki,
 			tekoki,
+			viar,
 			setpassword,
 			settings,
 			about
@@ -193,7 +195,7 @@
 					DataManager.importFile();
 					return;
 				}
-				if(item.key == "export"){
+				if (item.key == "export") {
 					DataManager.exportFile();
 					return;
 				}
@@ -250,7 +252,9 @@
 				}
 			}
 		},
-
+		onReachBottom() {
+			Utils.onReachBottom();
+		},
 		onBackPress() {
 			if (Utils.page_stack.length > 0) {
 				let item = Utils.page_stack.pop();
