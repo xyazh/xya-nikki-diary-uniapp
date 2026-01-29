@@ -9,6 +9,8 @@ import {
 
 const DM = new DataManager("viar");
 
+
+
 const RENDER_LIST = reactive([]);
 const RENDER_TAGS = reactive({});
 const SRHING_TAGS = reactive({});
@@ -17,6 +19,8 @@ const TAGS = {};
 const ViArTree = function() {
 	this._root = ViArNode.newRootNode();
 	this.node_map = {};
+	
+	this.read_viar = null;
 
 	this.tags = TAGS;
 

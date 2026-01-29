@@ -38,8 +38,8 @@
 	<view class="fixed-button" @tap="openWriter()">
 		<image src="@/static/icon/ck.png" class="fixed-button-icon" mode="widthFix"></image>
 	</view>
-	<view class="viar-card-box" :class="{ 'dcb-offset': status_box_on }">
-		<view class="viar-card" v-for="(item,index) in RENDER_LIST" :key="item.id" @tap="openItem(item)">
+	<view class="viar-card-box" :class="{ 'vcb-offset': status_box_on }">
+		<view class="viar-card" v-for="(item,index) in RENDER_LIST" :key="item.id" @tap="openItem(item.id)">
 			<view class="viar-text">{{item.time}}</view>
 			<view class="viar-title">{{item.title}}</view>
 			<view class="viar-text">{{item.meta}}</view>
@@ -78,8 +78,8 @@
 			}
 		},
 		methods: {
-			openItem(item) {
-				Utils.read_viar = item;
+			openItem(id) {
+				VIAR_TREE.read_viar = VIAR_TREE.getNode(id);
 				Utils.switchPage("readviar", "查看故事");
 			},
 			openWriter() {
@@ -95,6 +95,8 @@
 				this.srh_text = "";
 				this.srh_tag = "";
 				VIAR_TREE.renderTagsIdentity();
+				Utils.clearObj(SRHING_TAGS);
+				VIAR_TREE.initRenderList();
 			},
 			selectSrhTag(tag_name) {
 				SRHING_TAGS[tag_name] = TAGS[tag_name];
@@ -138,7 +140,7 @@
 		white-space: nowrap;
 		width: 100%;
 		height: 100%;
-		max-height: 32rpx;
+		max-height: 28px;
 		margin-top: 10rpx;
 		-webkit-overflow-scrolling: touch;
 	}
@@ -213,7 +215,6 @@
 	.viar-srh-box {
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
 		width: 100%;
 		overflow: hidden;
 		height: 0;
@@ -292,11 +293,7 @@
 		color: #000;
 	}
 
-	.dlb-offset {
-		margin-top: $viar-status-box-height-on;
-	}
-
-	.dcb-offset {
+	.vcb-offset {
 		margin-top: calc(5rpx + $viar-length-box-height + $viar-status-box-height-on);
 	}
 

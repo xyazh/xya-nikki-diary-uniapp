@@ -61,6 +61,7 @@
 	import writenikki from '@/components/pages/writenikki.vue'
 	import tekoki from '@/components/pages/tekoki.vue'
 	import viar from '@/components/pages/viar.vue'
+	import readviar from '@/components/pages/readviar.vue'
 	import setpassword from '@/components/pages/setpassword.vue'
 	import settings from '@/components/pages/settings.vue'
 	import about from '@/components/pages/about.vue';
@@ -139,6 +140,7 @@
 					writenikki,
 					tekoki,
 					viar,
+					readviar,
 					setpassword,
 					settings,
 					about
@@ -152,6 +154,7 @@
 			writenikki,
 			tekoki,
 			viar,
+			readviar,
 			setpassword,
 			settings,
 			about
