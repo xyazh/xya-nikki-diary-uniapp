@@ -141,16 +141,17 @@
 	.diary-input {
 		width: 100%;
 		min-height: 40vh;
-		font-size: 32rpx;
+		font-size: 30rpx;
+		line-height: 40rpx;
 		color: #000;
 		margin: 10rpx;
 	}
 
 	/* 分割线 */
 	.divider {
-		height: 2rpx;
-		background-color: #222;
-		margin: 2rpx 10rpx;
+		height: 1px;
+		background-color: #333;
+		margin: 1px 10rpx;
 	}
 
 	/* 日期时间行 */

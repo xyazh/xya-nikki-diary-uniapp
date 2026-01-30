@@ -21,7 +21,6 @@
 	</view>
 	<view class="readviar-box" :class="{ 'rvcb-offset': title_box_on }" v-html="STYLE_CONTENT+node.content">
 	</view>
-	<!--editor class="readviar-box" :class="{ 'rvcb-offset': title_box_on }" id="editor" v-html="STYLE_CONTENT+node.content"></editor-->
 	<view class="fixed-button" @tap="openWriter()" v-if="title_box_on">
 		<image src="@/static/icon/6G.png" class="fixed-button-icon" mode="widthFix"></image>
 	</view>
@@ -196,6 +195,8 @@
 		width: 100%;
 		margin-top: calc(5rpx + $readviar-length-box-height + $readviar-status-box-height-off);
 		transition: margin-top 0.3s ease;
+		font-size: 30rpx;
+		line-height: 40rpx;
 	}
 
 	.rvcb-offset {
