@@ -227,9 +227,11 @@ class DataManager {
 			return;
 		}
 		for (var fuc of DataManager.ON_IMPORT) {
+			var flag = true;
 			try {
 				fuc(data);
 			} catch (e) {
+				flag = false;
 				console.error("导入数据发生异常:", e);
 				console.error(fuc);
 				console.error(data);
@@ -238,6 +240,12 @@ class DataManager {
 					icon: "none"
 				});
 			}
+		}
+		if(flag){
+			uni.showToast({
+				title: "导入成功",
+				icon: "none"
+			});
 		}
 	}
 

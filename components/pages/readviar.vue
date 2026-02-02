@@ -13,9 +13,9 @@
 			<view class="readviarviar-title-text">{{node.title}}</view>
 		</view>
 		<view class="readviar-btn-line">
-			<text class="readviar-title-btn">链接</text>
-			<text class="readviar-title-btn">上级</text>
-			<text class="readviar-title-btn">下级</text>
+			<text class="readviar-title-btn" @tap="openLink()">链接</text>
+			<text class="readviar-title-btn" @tap="openHigh()">上级</text>
+			<text class="readviar-title-btn" @tap="openLow()">下级</text>
 			<text @click="openTitle()" class="readviar-title-btn">{{title_box_on ? "收起" : "展开"}}</text>
 		</view>
 	</view>
@@ -33,13 +33,15 @@
 	const STYLE_CONTENT = `
 	<style>	
 	hb {
-		background-color: black;
+		background-color: #000000;
 		color: #000000;
 	}
 	hb:hover {
 		background-color: rgba(200, 200, 200, 127);
 	}</style>
 	`;
+	
+	const SRH_TEXT = VIAR_TREE.getSrhText();
 
 	export default {
 		data() {
@@ -60,16 +62,63 @@
 		},
 		methods: {
 			openWriter() {
+				const TEMP_VIAR = VIAR_TREE.getTempViar();
+				TEMP_VIAR.title = VIAR_TREE.read_viar.title;
+				TEMP_VIAR.meta = VIAR_TREE.read_viar.meta;
+				TEMP_VIAR.text = VIAR_TREE.read_viar.content;
+				TEMP_VIAR.parent = VIAR_TREE.getNode(VIAR_TREE.read_viar.parent);
+				if (!TEMP_VIAR.parent) {
+					TEMP_VIAR.parent = VIAR_TREE.getNode("root");
+				}
+				for (let node_id of VIAR_TREE.read_viar.links) {
+					TEMP_VIAR.links.push(VIAR_TREE.getNode(node_id));
+				}
+				Utils.clearObj(TEMP_VIAR.tags);
+				Object.assign(TEMP_VIAR.tags,VIAR_TREE.read_viar.tags);
+				TEMP_VIAR.id = VIAR_TREE.read_viar.id;
 				Utils.switchPage("writeviar", "写故事");
 			},
 			openTitle() {
 				this.title_box_on = !this.title_box_on;
 			},
+			openHigh(){
+				VIAR_TREE.clearRenderList();
+				const RENDER_LIST = VIAR_TREE.getRenderList();
+				let node = VIAR_TREE.getNode(VIAR_TREE.read_viar.parent);
+				if(node){
+					RENDER_LIST.push(node);
+				}
+				Utils.switchPage("viar", "故事集");
+				SRH_TEXT.value ="查看父级:" + VIAR_TREE.read_viar.format();
+			},
+			openLow(){
+				VIAR_TREE.clearRenderList();
+				const RENDER_LIST = VIAR_TREE.getRenderList();
+				for(let node_id of VIAR_TREE.getNodesWithChild(VIAR_TREE.read_viar)){
+					let node = VIAR_TREE.getNode(node_id);
+					if(!node){
+						continue;
+					}
+					RENDER_LIST.push(node);
+				}
+				Utils.switchPage("viar", "故事集");
+				SRH_TEXT.value = "查看子级:" + VIAR_TREE.read_viar.format();
+			},
+			openLink(){
+				VIAR_TREE.clearRenderList();
+				const RENDER_LIST = VIAR_TREE.getRenderList();
+				for(let node_id of VIAR_TREE.read_viar.links){
+					let node = VIAR_TREE.getNode(node_id);
+					if(!node){
+						continue;
+					}
+					RENDER_LIST.push(node);
+				}
+				Utils.switchPage("viar", "故事集");
+				SRH_TEXT.value = "查看链接:" + VIAR_TREE.read_viar.format();
+			},
 		},
 		mounted() {
-			/*uni.createSelectorQuery().select('#editor').context((res) => {
-				this.editorCtx = res.context
-			}).exec()*/
 		},
 		unmounted() {},
 	}

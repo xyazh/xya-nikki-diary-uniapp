@@ -21,6 +21,10 @@ const ViArNode = function(data) {
 	for (let tag of data.tags) {
 		this.tags[tag] = Utils.invertColor(Utils.md5(tag));
 	}
+	
+	this.format = function(){
+		return `<node:${this.title}|id=${this.id}>`
+	}
 
 	this.getRenderNode = function() {
 		var result = {
@@ -97,6 +101,9 @@ ViArNode.newRootNode = function() {
 
 ViArNode.newNode = function(title, content, tag_list, parent, links, meta) {
 	var date = Date.parse(new Date());
+	if(tag_list.length<=0){
+		tag_list.push("无");
+	}
 	var data = {
 		title: title,
 		date: date,

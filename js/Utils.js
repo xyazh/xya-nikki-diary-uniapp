@@ -223,6 +223,10 @@ Utils.invertColor = function(hex) {
 	return hex1;
 }
 
+Utils.createUUID = function(){
+	return crypto.randomUUID();
+}
+
 
 Utils.parseTimeString = function(time_string) {
 	const regexes = [

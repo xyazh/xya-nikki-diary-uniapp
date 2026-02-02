@@ -1,5 +1,5 @@
 <template>
-	<input class="viar-title-input" v-model="title" placeholder="标题" />
+	<input class="viar-title-input" v-model="TEMP_VIAR.title" placeholder="标题" />
 	<!-- 工具栏 -->
 	<view v-show="input_mode">
 		<view class="editor-toolbar">
@@ -19,10 +19,11 @@
 				<text class="editor-toolbar__text">防剧透</text>
 			</view>
 		</view>
-		<editor v-model="text" id="editor" class="viar-editor" :class="{ 'viar-editor-full': full }" placeholder="写些什么罢"
+		<editor id="editor" class="viar-editor" :class="{ 'viar-editor-full': full }" placeholder="写些什么罢"
 			@ready="onEditorReady" @input="onEditorInput"></editor>
 	</view>
-	<textarea v-show="!input_mode" v-model="text" class="viar-editor" :class="{ 'viar-editor-full': full }" placeholder="写些什么罢" :maxlength="-1"></textarea>
+	<textarea v-show="!input_mode" v-model="TEMP_VIAR.text" class="viar-editor" :class="{ 'viar-editor-full': full }"
+		placeholder="写些什么罢" :maxlength="-1"></textarea>
 	<view class="divider"></view>
 	<view class="writeviar-btn-line">
 		<text class="writeviar-title-btn" @tap="smode()">切换</text>
@@ -40,17 +41,21 @@
 		</view>
 	</view>
 	<view class="viar-tag-box">
-		<view class="viar-tag" v-for="(tag_color,tag_name) in SRHING_TAGS" :key="tag_name"
+		<view class="viar-tag" v-for="(tag_color,tag_name) in TEMP_VIAR.tags" :key="tag_name"
 			:style="{ backgroundColor: tag_color }" @tap="unSelectSrhTag(tag_name)">
 			<view class="viar-tag-text">{{ tag_name }}</view>
 		</view>
 	</view>
 	<view class="divider"></view>
-	<text class="writeviar-btn">父节点</text>
+	<view class="writeviar-node">{{TEMP_VIAR.parent.format()}}</view>
+	<text class="writeviar-btn" @tap="selectParent()">父节点</text>
 	<view class="divider"></view>
-	<text class="writeviar-btn">链接</text>
+	<view v-for="(node,index) in TEMP_VIAR.links" :key="node.id" class="writeviar-node" @tap="unSelectLink(node,index)">
+		{{node.format()}}
+	</view>
+	<text class="writeviar-btn" @tap="selectLink()">链接</text>
 	<view class="divider"></view>
-	<input class="viar-meta-input" v-model="meta" placeholder="编辑meta" />
+	<input class="viar-meta-input" v-model="TEMP_VIAR.meta" placeholder="编辑meta" />
 	<view class="fixed-button" @tap="viarSave()">
 		<image src="@/static/icon/8z.png" class="fixed-button-icon" mode="widthFix"></image>
 	</view>
@@ -59,41 +64,59 @@
 <script>
 	import Utils from '@/js/Utils.js'
 	import VIAR_TREE from '@/js/ViArTree.js'
+	import {
+		ref,
+		reactive,
+		shallowReactive
+	} from "vue"
 
 	const RENDER_LIST = VIAR_TREE.getRenderList();
 	const RENDER_TAGS = VIAR_TREE.getRenderTags();
-	const SRHING_TAGS = VIAR_TREE.getSthingTag();
 	const TAGS = VIAR_TREE.getTags();
+	const TEMP_VIAR = VIAR_TREE.getTempViar();
 
 	export default {
 		data() {
 			return {
 				Utils,
-				title: "",
-				meta: "",
 				srh_tag: "",
-				full:false,
+				full: false,
 				editorCtx: null,
-				text: "",
 				syncing: false,
 				input_mode: false,
 				RENDER_LIST,
 				RENDER_TAGS,
-				SRHING_TAGS,
+				TEMP_VIAR,
 			}
 		},
 		methods: {
 			smode() {
 				this.input_mode = !this.input_mode;
 			},
-			sfull(){
+			sfull() {
 				this.full = !this.full;
 			},
+			selectParent() {
+				VIAR_TREE.last_page = ["writeviar", "写故事"];
+				VIAR_TREE.srhing_node = null;
+				VIAR_TREE.srhing_mode = true;
+				VIAR_TREE.srhing_code = 1;
+				Utils.switchPage("viar", "故事集");
+			},
+			selectLink() {
+				VIAR_TREE.last_page = ["writeviar", "写故事"];
+				VIAR_TREE.srhing_node = null;
+				VIAR_TREE.srhing_mode = true;
+				VIAR_TREE.srhing_code = 2;
+				Utils.switchPage("viar", "故事集");
+			},
+			unSelectLink(node, index) {
+				TEMP_VIAR.links.splice(index, 1);
+			},
 			viarSave() {
-				let html = this.text || '';
+				let html = TEMP_VIAR.text || '';
 				const count = (html.match(/■/g) || []).length;
 				if (count % 2 === 1) {
-					// 尝试补在最后一个段落内
 					const pIndex = html.lastIndexOf('</p>');
 					if (pIndex !== -1) {
 						html = html.slice(0, pIndex) + '■' + html.slice(pIndex);
@@ -106,36 +129,85 @@
 					open = !open
 					return open ? '<hb>' : '</hb>';
 				})
-				console.log('final html:', html);
-				// TODO: 提交 / 存储
-				// saveToServer(html)
-
+				if (TEMP_VIAR.id !== null) {
+					if (html == "") {
+						VIAR_TREE.delNode(TEMP_VIAR.id);
+					} else if (TEMP_VIAR.title == "") {
+						VIAR_TREE.delNode(TEMP_VIAR.id);
+					} else {
+						VIAR_TREE.updateNode(
+							TEMP_VIAR.id,
+							TEMP_VIAR.parent,
+							TEMP_VIAR.title,
+							html,
+							Object.keys(TEMP_VIAR.tags),
+							TEMP_VIAR.links,
+							TEMP_VIAR.meta
+						);
+					}
+				} else {
+					if (html == "") {
+						
+					} else if (TEMP_VIAR.title == "") {
+						
+					} else {
+						VIAR_TREE.newNode(
+							TEMP_VIAR.parent,
+							TEMP_VIAR.title,
+							html,
+							Object.keys(TEMP_VIAR.tags),
+							TEMP_VIAR.links,
+							TEMP_VIAR.meta
+						);
+					}
+				}
+				VIAR_TREE.save()
+					.initRenderList();
+				TEMP_VIAR.title = "";
+				TEMP_VIAR.meta = "";
+				TEMP_VIAR.text = "";
+				TEMP_VIAR.links.length = 0;
+				Utils.clearObj(TEMP_VIAR.tags);
+				TEMP_VIAR.parent = VIAR_TREE.getNode("root");
+				TEMP_VIAR.id = null;
+				Utils.switchPage("viar", "故事集");
 			},
 			selectSrhTag(tag_name) {
-				SRHING_TAGS[tag_name] = TAGS[tag_name];
+				TEMP_VIAR.tags[tag_name] = TAGS[tag_name];
 			},
 			unSelectSrhTag(tag_name) {
-				delete SRHING_TAGS[tag_name];
+				delete TEMP_VIAR.tags[tag_name];
 			},
 			srhTag() {
 				if (this.srh_tag == "") {
 					VIAR_TREE.renderTagsIdentity();
 					return;
 				}
-				VIAR_TREE.searchTag(this.srh_tag);
+				VIAR_TREE.searchTag(this.srh_tag, true);
 			},
 			onEditorReady() {
 				uni.createSelectorQuery()
 					.select('#editor')
 					.context(res => {
 						this.editorCtx = res.context;
+						try {
+							this.editorCtx.setContents({
+								html: TEMP_VIAR.text,
+								success: () => {
+									this.syncing = false;
+								}
+							})
+						} catch (e) {
+							this.syncing = false;
+							return;
+						}
 					})
 					.exec();
 			},
 			onEditorInput(e) {
 				if (this.syncing) return;
 				this.syncing = true;
-				this.text = e.detail.html || '';
+				TEMP_VIAR.text = e.detail.html || '';
 				this.$nextTick(() => {
 					this.syncing = false;
 				})
@@ -159,8 +231,7 @@
 			},
 		},
 		watch: {
-			// textarea → editor
-			text(val) {
+			'TEMP_VIAR.text'(val) {
 				if (this.syncing) return;
 				if (!this.editorCtx) return;
 				this.syncing = true;
@@ -177,7 +248,23 @@
 				}
 			}
 		},
-		mounted() {},
+		mounted() {
+			while (VIAR_TREE.srhing_mode) {
+				if (!VIAR_TREE.srhing_node) {
+					break;
+				}
+				if (VIAR_TREE.srhing_code == 1) {
+					TEMP_VIAR.parent = VIAR_TREE.srhing_node;
+				} else if (VIAR_TREE.srhing_code == 2) {
+					TEMP_VIAR.links.push(VIAR_TREE.srhing_node);
+				}
+				VIAR_TREE.srhing_mode = false;
+				VIAR_TREE.srhing_node = null;
+				VIAR_TREE.srhing_node = 0;
+				break;
+			}
+
+		},
 	}
 </script>
 
@@ -216,6 +303,17 @@
 		background-color: #77aaff;
 		box-shadow: 0 4rpx 6rpx rgba(0, 0, 0, 0.2);
 		z-index: 4;
+	}
+
+	.writeviar-node {
+		font-size: 20rpx;
+		margin: 20rpx 0;
+		height: 22rpx;
+		line-height: 22rpx;
+		color: #333;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.writeviar-btn-line {
@@ -262,8 +360,8 @@
 		color: #000;
 		margin: 10rpx;
 	}
-	
-	.viar-editor-full{
+
+	.viar-editor-full {
 		width: 100vh;
 		height: 100vh;
 	}

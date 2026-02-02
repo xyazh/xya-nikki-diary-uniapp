@@ -16,13 +16,22 @@ const RENDER_TAGS = reactive({});
 const SRHING_TAGS = reactive({});
 const TAGS = {};
 
+const SRH_TEXT = ref("");
+
+
 const ViArTree = function() {
 	this._root = ViArNode.newRootNode();
 	this.node_map = {};
-	
+
 	this.read_viar = null;
+	this.temp_viar = null;
 
 	this.tags = TAGS;
+
+	this.srhing_mode = false;
+	this.srhing_node = null;
+	this.srhing_code = 0;
+	this.last_page = [];
 
 	this.renderTagsIdentity = () => {
 		Utils.clearObj(RENDER_TAGS);
@@ -44,6 +53,14 @@ const ViArTree = function() {
 
 	this.getRenderTags = () => {
 		return RENDER_TAGS;
+	}
+
+	this.getSrhText = () => {
+		return SRH_TEXT;
+	}
+
+	this.getTempViar = () => {
+		return TEMP_VIAR;
 	}
 
 	this.initRenderList = () => {
@@ -190,7 +207,7 @@ const ViArTree = function() {
 			this.delNode(child, false);
 		}
 		if (clear_parent) {
-			parent_node = this.getNode(node.parent);
+			var parent_node = this.getNode(node.parent);
 			if (parent_node != undefined) {
 				parent_node.childs.delete(node_id);
 			}
@@ -294,13 +311,16 @@ const ViArTree = function() {
 			var node = this.node_map[node_id];
 			node_save_map[node_id] = node.save();
 		}
-
 		DM.set("data", {
 			root: this._root.save(),
 			node_map: node_save_map,
 			tags: Object.keys(this.tags),
 		}).save();
 		return this;
+	}
+
+	this.passwordChange = () => {
+		this.save();
 	}
 
 	this.loadData = () => {
@@ -334,8 +354,24 @@ const ViArTree = function() {
 
 	this.importFile = (data) => {
 		let out_viar = JSON.parse(data.out_viar);
+		console.log(out_viar);
 		this.load(out_viar)
 			.save();
+	}
+
+	this.exportFile = () => {
+		const node_save_map = {
+			node_map:{},
+			root:this._root.save(),
+			tags:Object.keys(TAGS),
+		};
+		for (var node_id in this.node_map) {
+			var node = this.node_map[node_id];
+			node_save_map.node_map[node_id] = node.save();
+		}
+		const data = {};
+		data.out_viar = JSON.stringify(node_save_map);
+		return data;
 	}
 
 	this.forEachNode = (callback, args) => {
@@ -402,13 +438,13 @@ const ViArTree = function() {
 	}
 
 
-	this.searchTag = (keyword) => {
+	this.searchTag = (raw_keyword, create = false) => {
 		var result = [];
-		var keywords = Utils.splitKeyword(keyword);
+		var keywords = Utils.splitKeyword(raw_keyword);
 		for (var tag in this.tags) {
 			tag = String(tag);
 			var n = 0;
-			for (keyword of keywords) {
+			for (let keyword of keywords) {
 				if (tag.includes(keyword)) {
 					n += 1;
 				}
@@ -423,6 +459,11 @@ const ViArTree = function() {
 		}
 		result.sort((a, b) => b.score - a.score);
 		Utils.clearObj(RENDER_TAGS);
+		if (create) {
+			let color = Utils.invertColor(Utils.md5(raw_keyword));
+			RENDER_TAGS[raw_keyword] = color;
+			TAGS[raw_keyword] = color;
+		}
 		for (let tag_warp of result) {
 			RENDER_TAGS[tag_warp.tag] = TAGS[tag_warp.tag];
 		}
@@ -442,10 +483,20 @@ const ViArTree = function() {
 }
 const VIAR_TREE = new ViArTree();
 
+const TEMP_VIAR = reactive({
+	title: "",
+	meta: "",
+	text: "",
+	links: [],
+	tags: {},
+	parent: VIAR_TREE.getNode("root"),
+	id: null,
+});
+
 
 DataManager.onLoadData(VIAR_TREE.loadData);
 DataManager.onImportFile(VIAR_TREE.importFile);
-//DataManager.onExportFile(Nikkis.exportFile);
-//DataManager.onPasswordChange(Nikkis.passwordChange);
+DataManager.onExportFile(VIAR_TREE.exportFile);
+DataManager.onPasswordChange(VIAR_TREE.passwordChange);
 
 export default VIAR_TREE;

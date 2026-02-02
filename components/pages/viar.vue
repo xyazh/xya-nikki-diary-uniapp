@@ -9,7 +9,7 @@
 			<view class="line"></view>
 			<text class="viar-srh-title">搜索条件</text>
 			<view class="viar-srh-line" :class="{ 'viar-srh-line-on': status_box_on }">
-				<input v-model="srh_text" class="viar-srh-input" placeholder="搜索" />
+				<input v-model="SRH_TEXT" class="viar-srh-input" placeholder="搜索" />
 			</view>
 			<text class="viar-srh-title">Tags</text>
 			<view class="viar-srh-line" :class="{ 'viar-srh-line-on': status_box_on }">
@@ -35,7 +35,7 @@
 			<text @click="openStatus()" class="viar-status-btn">{{status_box_on ? "收起" : "展开"}}</text>
 		</view>
 	</view>
-	<view class="fixed-button" @tap="openWriter()">
+	<view v-if="!SRHING_MODE" class="fixed-button" @tap="openWriter()">
 		<image src="@/static/icon/ck.png" class="fixed-button-icon" mode="widthFix"></image>
 	</view>
 	<view class="viar-card-box" :class="{ 'vcb-offset': status_box_on }">
@@ -58,12 +58,19 @@
 <script>
 	import Utils from '@/js/Utils.js'
 	import VIAR_TREE from '@/js/ViArTree.js'
-
+	import {
+		ref,
+		reactive,
+		shallowReactive
+	} from "vue"
 
 	const RENDER_LIST = VIAR_TREE.getRenderList();
 	const RENDER_TAGS = VIAR_TREE.getRenderTags();
 	const SRHING_TAGS = VIAR_TREE.getSthingTag();
+	const SRH_TEXT = VIAR_TREE.getSrhText();
 	const TAGS = VIAR_TREE.getTags();
+
+	const SRHING_MODE = ref(false);
 
 	export default {
 		data() {
@@ -72,13 +79,19 @@
 				RENDER_LIST: RENDER_LIST,
 				RENDER_TAGS: RENDER_TAGS,
 				SRHING_TAGS: SRHING_TAGS,
-				status_box_on: false,
-				srh_text: "",
+				SRHING_MODE: SRHING_MODE,
+				status_box_on: true,
+				SRH_TEXT: SRH_TEXT,
 				srh_tag: "",
 			}
 		},
 		methods: {
 			openItem(id) {
+				if (SRHING_MODE.value) {
+					VIAR_TREE.srhing_node = VIAR_TREE.getNode(id);
+					Utils.switchPage(...VIAR_TREE.last_page);
+					return;
+				}
 				VIAR_TREE.read_viar = VIAR_TREE.getNode(id);
 				Utils.switchPage("readviar", "查看故事");
 			},
@@ -89,10 +102,10 @@
 				this.status_box_on = !this.status_box_on;
 			},
 			srh() {
-				VIAR_TREE.useSearch(this.srh_text);
+				VIAR_TREE.useSearch(SRH_TEXT.value);
 			},
 			unrsh() {
-				this.srh_text = "";
+				SRH_TEXT.value = "";
 				this.srh_tag = "";
 				VIAR_TREE.renderTagsIdentity();
 				Utils.clearObj(SRHING_TAGS);
@@ -112,7 +125,9 @@
 				VIAR_TREE.searchTag(this.srh_tag);
 			},
 		},
-		mounted() {},
+		mounted() {
+			SRHING_MODE.value = VIAR_TREE.srhing_mode;
+		},
 		unmounted() {},
 	}
 </script>
