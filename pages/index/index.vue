@@ -63,6 +63,7 @@
 	import viar from '@/components/pages/viar.vue'
 	import readviar from '@/components/pages/readviar.vue'
 	import writeviar from '@/components/pages/writeviar.vue'
+	import passwordbook from '@/components/pages/passwordbook.vue'
 	import setpassword from '@/components/pages/setpassword.vue'
 	import settings from '@/components/pages/settings.vue'
 	import about from '@/components/pages/about.vue';
@@ -98,7 +99,7 @@
 		},
 		{
 			title: "密码簿",
-			key: "home",
+			key: "passwordbook",
 			icon: "/static/icon/NP.png"
 		},
 		{
@@ -123,7 +124,7 @@
 		},
 		{
 			title: "退出",
-			key: "home",
+			key: "exit",
 			icon: "/static/icon/6y.png"
 		}
 	]);
@@ -143,6 +144,7 @@
 					viar,
 					readviar,
 					writeviar,
+					passwordbook,
 					setpassword,
 					settings,
 					about
@@ -158,6 +160,7 @@
 			viar,
 			readviar,
 			writeviar,
+			passwordbook,
 			setpassword,
 			settings,
 			about
@@ -203,6 +206,17 @@
 				}
 				if (item.key == "export") {
 					DataManager.exportFile();
+					return;
+				}
+				if (item.key == "exit") {
+					const sys = uni.getSystemInfoSync();
+					if (
+						(sys.platform === 'android' || sys.platform === 'ios') &&
+						typeof plus !== 'undefined' &&
+						plus.runtime
+					) {
+						plus.runtime.quit();
+					}
 					return;
 				}
 				if (process.env.UNI_PLATFORM === 'h5') {

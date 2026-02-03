@@ -24,6 +24,9 @@ class Nikkis {
 
 	static importFile(data) {
 		let out_nikki = data.out_nikki;
+		if(!out_nikki){
+			return;
+		}
 		Nikkis.reset(out_nikki)
 			.sort()
 			.countAllText()

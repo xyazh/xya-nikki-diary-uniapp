@@ -12,6 +12,7 @@ class DataManager {
 	static ON_LOAD = [];
 	static ON_PASSWORD_CHANGE = [];
 	static password = null;
+	static DMS = new Set();
 
 	static onImportFile(fuc) {
 		DataManager.ON_IMPORT.push(fuc);
@@ -33,8 +34,8 @@ class DataManager {
 		DataManager.ON_PASSWORD_CHANGE.push(fuc);
 	}
 
-	static exportFile() {
-		const has_pw = DataManager.passwordKeeping();
+	static exportFile(use_pw = true) {
+		const has_pw = use_pw && DataManager.passwordKeeping();
 		const is_plain = !has_pw;
 		const data = DataManager.writeData(has_pw);
 		const plain_str = is_plain ? "-plain" : "";
@@ -241,7 +242,7 @@ class DataManager {
 				});
 			}
 		}
-		if(flag){
+		if (flag) {
 			uni.showToast({
 				title: "导入成功",
 				icon: "none"
@@ -340,6 +341,7 @@ class DataManager {
 		this.name = name;
 		this.is_load = false;
 		this.data = {};
+		DataManager.DMS.add(this);
 	}
 
 	load() {

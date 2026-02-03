@@ -1,6 +1,5 @@
 <template>
 	<view class="tekoki-dl-mask" :class="{ 'tekoki-dl-mask-show': tekoki_dl_mask}" @click="closeDl()">
-
 	</view>
 	<view v-if="tekoki_dl1" class="tekoki-dl1">
 		<view class="tekoki-dl-bar">
@@ -508,7 +507,6 @@
 
 	.calendar-day-text {
 		position: relative;
-		z-index: 1;
 		font-size: 30rpx;
 		color: $dis-text-color;
 	}

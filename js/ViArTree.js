@@ -354,7 +354,6 @@ const ViArTree = function() {
 
 	this.importFile = (data) => {
 		let out_viar = JSON.parse(data.out_viar);
-		console.log(out_viar);
 		this.load(out_viar)
 			.save();
 	}
@@ -479,6 +478,7 @@ const ViArTree = function() {
 			}
 		});
 		this.renderTagsIdentity();
+		return this;
 	}
 }
 const VIAR_TREE = new ViArTree();

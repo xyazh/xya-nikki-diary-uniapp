@@ -52,6 +52,9 @@ class Tekoki {
 
 	static importFile(data) {
 		let out_tekoki = data.out_tekoki;
+		if(!out_tekoki){
+			return;
+		}
 		TEKOKIS.data = out_tekoki.data;
 		TEKOKIS.events = out_tekoki.events;
 		Tekoki.setTekokikEvents(out_tekoki.events);
