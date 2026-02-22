@@ -27,7 +27,6 @@
 	const tn = Utils.temp_nikki;
 
 
-
 	export default {
 		data() {
 			return {
@@ -47,7 +46,7 @@
 				})
 				let now = new Date(
 					Number(tn.year),
-					Number(tn.month),
+					Number(tn.month) - 1, 
 					Number(tn.day),
 					Number(tn.hours),
 					Number(tn.minu), 0);
@@ -64,7 +63,7 @@
 				})
 				let now = new Date(
 					Number(tn.year),
-					Number(tn.month),
+					Number(tn.month) - 1,
 					Number(tn.day),
 					Number(tn.hours),
 					Number(tn.minu), 0);
@@ -74,13 +73,14 @@
 			nikkiSave() {
 				const NIKKIS = Nikkis;
 				let tn = this.tn;
+				console.log(tn)
 				if (tn.is_new === true) {
 					return;
 				} else if (tn.text == "") {
 					NIKKIS.del(tn.id)
-					.sort()
-					.countAllText()
-					.save();
+						.sort()
+						.countAllText()
+						.save();
 					this.tn.is_new = true;
 					Utils.switchPage("nikki", "日记");
 					return;
@@ -95,6 +95,7 @@
 			}
 		},
 		mounted() {
+			//let tn = this.tn;
 			if (tn.is_new === true || tn.text == "") {
 				let now = new Date();
 				tn.date = now.getTime();

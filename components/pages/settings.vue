@@ -49,6 +49,7 @@
 <script>
 	import Utils from '@/js/Utils.js'
 	import DataManager from '@/js/DataManager.js'
+	import Nikkis from '../../js/Nikkis.js'
 	import Tekoki from '@/js/Tekoki.js'
 	import VIAR_TREE from '@/js/ViArTree.js'
 
@@ -62,7 +63,13 @@
 				DataManager.exportFile(false);
 			},
 			exportDayOne() {},
-			checkDiaryTime() {},
+			checkDiaryTime() {
+				Nikkis.checkNikkiTime().save();
+				uni.showToast({
+					title: `校验日记时间`,
+					icon: 'none'
+				});
+			},
 			clearEvents() {
 				Tekoki.reCreateTekok().save();
 				uni.showToast({
