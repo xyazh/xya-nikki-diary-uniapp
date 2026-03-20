@@ -2,7 +2,7 @@
 	<view class="diary-read-length-box">
 		<text class="diary-length">共{{Utils.read_nikki.text.length}}字</text>
 	</view>
-	
+
 	<view class="fixed-button" @tap="openWriter()">
 		<image src="@/static/icon/6G.png" class="fixed-button-icon" mode="widthFix"></image>
 	</view>
@@ -33,6 +33,7 @@
 <script>
 	import Utils from '@/js/Utils.js'
 	export default {
+		emits: ['page-mounted'],
 		data() {
 			return {
 				Utils,
@@ -40,13 +41,17 @@
 			}
 		},
 		methods: {
-			openWriter(){
+			openWriter() {
 				let tn = Utils.temp_nikki;
 				let rn = Utils.read_nikki;
 				Object.assign(tn, rn);
 				Utils.switchPage("writenikki", "写日记");
 			}
 		},
+		mounted() {
+			this.$emit('page-mounted');
+		},
+		unmounted() {},
 	}
 </script>
 
@@ -54,13 +59,13 @@
 <style lang="scss">
 	$dis-text-color: #757575;
 	$diary-length-box-height: 64rpx;
-	
+
 	.fixed-button-icon {
 		width: 105rpx;
 		height: 105rpx;
 		filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(233deg) brightness(106%) contrast(101%);
 	}
-	
+
 	.fixed-button {
 		display: flex;
 		justify-content: center;
@@ -84,7 +89,7 @@
 		height: $diary-length-box-height;
 		background-color: #fff;
 	}
-	
+
 	.diary-length {
 		color: $dis-text-color;
 		font-size: 26rpx;

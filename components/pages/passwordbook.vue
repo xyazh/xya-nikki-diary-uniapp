@@ -82,7 +82,7 @@
 	<view class="fixed-button" @tap="addPassword()">
 		<image src="@/static/icon/ck.png" class="fixed-button-icon" mode="widthFix"></image>
 	</view>
-<view class="pwb-length-box" :class="{ 'pwb-length-box-offset': pwb_box_on }">
+	<view class="pwb-length-box" :class="{ 'pwb-length-box-offset': pwb_box_on }">
 		<text class="pwb-length">共{{RENDER_LIST.length}}篇</text>
 	</view>
 	<view class="pwb-list" :class="{ 'pwb-list-on': pwb_box_on }">
@@ -126,6 +126,7 @@
 	const TEMP_PASSWORD = PASSWORD_BOOK.getTempPassword();
 
 	export default {
+		emits: ['page-mounted'],
 		data() {
 			return {
 				pwb_box_on: false,
@@ -145,10 +146,10 @@
 			},
 			openItem(item) {
 				PASSWORD_BOOK.clearTempPassword();
-				Object.assign(TEMP_PASSWORD,item);
+				Object.assign(TEMP_PASSWORD, item);
 				this.openDl();
 			},
-			addPassword(){
+			addPassword() {
 				this.copy_mode = false;
 				this.openDl();
 			},
@@ -207,7 +208,9 @@
 				this.copy_mode = !this.copy_mode;
 			},
 		},
-		mounted() {},
+		mounted() {
+			this.$emit('page-mounted');
+		},
 		unmounted() {},
 	}
 </script>
@@ -491,7 +494,7 @@
 		color: #222222;
 		background-color: #ffffff;
 	}
-	
+
 	.pwb-length-box {
 		position: fixed;
 		width: 100%;
@@ -504,12 +507,12 @@
 		border-top: 1rpx solid #ddd;
 		transition: margin-top 0.3s ease;
 	}
-	
+
 	.pwb-length {
 		color: $dis-text-color;
 		font-size: 26rpx;
 	}
-	
+
 	.pwb-length-box-offset {
 		margin-top: $pwb-box-height-on;
 	}

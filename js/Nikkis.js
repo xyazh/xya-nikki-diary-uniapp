@@ -203,6 +203,7 @@ class Nikkis {
 		return SRH_ON;
 	}
 
+
 	static countAllText() {
 		let n = 0;
 		for (let nikki of NIKKI_LIST) {

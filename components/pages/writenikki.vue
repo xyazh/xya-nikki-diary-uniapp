@@ -28,6 +28,7 @@
 
 
 	export default {
+		emits: ['page-mounted'],
 		data() {
 			return {
 				Utils,
@@ -46,7 +47,7 @@
 				})
 				let now = new Date(
 					Number(tn.year),
-					Number(tn.month) - 1, 
+					Number(tn.month) - 1,
 					Number(tn.day),
 					Number(tn.hours),
 					Number(tn.minu), 0);
@@ -110,8 +111,10 @@
 
 				tn.week = "周" + "日一二三四五六".charAt(now.getDay());
 				tn.is_new = false;
+				this.$emit('page-mounted');
 			}
 		},
+		unmounted() {},
 	}
 </script>
 

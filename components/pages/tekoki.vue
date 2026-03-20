@@ -101,6 +101,7 @@
 	let now = new Date();
 
 	export default {
+		emits: ['page-mounted'],
 		data() {
 			return {
 				TEKOKI: Tekoki,
@@ -247,12 +248,14 @@
 				this.closeDl();
 			},
 		},
+		unmounted() {},
 		mounted() {
 			Tekoki.setTekokiTable(
 				this.tekoking_event,
 				this.on_year,
 				this.on_month
 			);
+			this.$emit('page-mounted');
 		}
 	}
 </script>

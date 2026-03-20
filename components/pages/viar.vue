@@ -73,6 +73,7 @@
 	const SRHING_MODE = ref(false);
 
 	export default {
+		emits: ['page-mounted'],
 		data() {
 			return {
 				Utils: Utils,
@@ -127,6 +128,7 @@
 		},
 		mounted() {
 			SRHING_MODE.value = VIAR_TREE.srhing_mode;
+			this.$emit('page-mounted');
 		},
 		unmounted() {},
 	}

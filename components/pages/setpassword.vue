@@ -34,6 +34,7 @@
 	import DataManager from '@/js/DataManager';
 
 	export default {
+		emits: ['page-mounted'],
 		data() {
 			return {
 				has_password: DataManager.hasPassword(),
@@ -79,8 +80,9 @@
 			},
 		},
 		mounted() {
-
+			this.$emit('page-mounted');
 		},
+		unmounted() {},
 	}
 </script>
 

@@ -54,6 +54,7 @@
 	import VIAR_TREE from '@/js/ViArTree.js'
 
 	export default {
+		emits: ['page-mounted'],
 		data() {
 			return {}
 		},
@@ -106,7 +107,9 @@
 				});
 			},
 		},
-		mounted() {},
+		mounted() {
+			this.$emit('page-mounted');
+		},
 		unmounted() {},
 	}
 </script>

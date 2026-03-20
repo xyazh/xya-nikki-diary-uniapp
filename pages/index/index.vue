@@ -17,8 +17,9 @@
 	<view class="container">
 		<!-- 页面内容 -->
 		<view class="page-content">
-			<component :is="currentPage"></component>
+			<component :is="currentPage" @page-mounted="onPageMounted"></component>
 		</view>
+
 		<view class="overlay" :class="{ 'overlay-show': sidebarVisible }" @click="closeSidebar">
 		</view>
 		<view class="sidebar" :class="{ 'sidebar-open': sidebarVisible }">
@@ -34,27 +35,10 @@
 	</view>
 </template>
 
-<script setup>
+<script>
 	import {
 		ref,
-		computed
-	} from 'vue';
-	import {
-		useRoute
-	} from 'vue-router';
-
-	const sidebarVisible = ref(false);
-
-	const toggleSidebar = () => {
-		sidebarVisible.value = !sidebarVisible.value;
-	};
-
-	const closeSidebar = () => {
-		sidebarVisible.value = false;
-	};
-</script>
-
-<script sub>
+	} from "vue"
 	import home from '@/components/pages/home.vue'
 	import nikki from '@/components/pages/nikki.vue'
 	import readnikki from '@/components/pages/readnikki.vue'
@@ -71,70 +55,69 @@
 	import Utils from '@/js/Utils.js';
 	import DataManager from '@/js/DataManager';
 
-	// 页面标题
-	const title = ref('主页');
 	if (process.env.UNI_PLATFORM === 'h5') {
 		location.hash = `#home|${encodeURIComponent('主页')}`;
 	}
-
-	const sidebaItems = ref([{
-			title: "主页",
-			key: "home",
-			icon: "/static/icon/lS.png"
-		},
-		{
-			title: "日记",
-			key: "nikki",
-			icon: "/static/icon/_N.png"
-		},
-		{
-			title: "记录",
-			key: "tekoki",
-			icon: "/static/icon/6G.png"
-		},
-		{
-			title: "故事集",
-			key: "viar",
-			icon: "/static/icon/ls2.png"
-		},
-		{
-			title: "密码簿",
-			key: "passwordbook",
-			icon: "/static/icon/NP.png"
-		},
-		{
-			title: DataManager.hasPassword() ? "修改密码" : "创建密码",
-			key: "setpassword",
-			icon: "/static/icon/ul2.png"
-		},
-		{
-			title: "导出",
-			key: "export",
-			icon: "/static/icon/D8.png"
-		},
-		{
-			title: "导入",
-			key: "import",
-			icon: "/static/icon/KY.png"
-		},
-		{
-			title: "设置",
-			key: "settings",
-			icon: "/static/icon/i1.png"
-		},
-		{
-			title: "退出",
-			key: "exit",
-			icon: "/static/icon/6y.png"
-		}
-	]);
-
 	export default {
 		data() {
 			return {
 				showMask: DataManager.hasPassword(),
+				sidebarVisible: false,
 				password: "",
+				title: "主页",
 				currentPage: "home",
+				scrollPositions: {},
+				sidebaItems: [{
+						title: "主页",
+						key: "home",
+						icon: "/static/icon/lS.png"
+					},
+					{
+						title: "日记",
+						key: "nikki",
+						icon: "/static/icon/_N.png"
+					},
+					{
+						title: "记录",
+						key: "tekoki",
+						icon: "/static/icon/6G.png"
+					},
+					{
+						title: "故事集",
+						key: "viar",
+						icon: "/static/icon/ls2.png"
+					},
+					{
+						title: "密码簿",
+						key: "passwordbook",
+						icon: "/static/icon/NP.png"
+					},
+					{
+						title: DataManager.hasPassword() ? "修改密码" : "创建密码",
+						key: "setpassword",
+						icon: "/static/icon/ul2.png"
+					},
+					{
+						title: "导出",
+						key: "export",
+						icon: "/static/icon/D8.png"
+					},
+					{
+						title: "导入",
+						key: "import",
+						icon: "/static/icon/KY.png"
+					},
+					{
+						title: "设置",
+						key: "settings",
+						icon: "/static/icon/i1.png"
+					},
+					{
+						title: "退出",
+						key: "exit",
+						icon: "/static/icon/6y.png"
+					}
+				],
 				pages: {
 					home,
 					nikki,
@@ -166,6 +149,22 @@
 			about
 		},
 		methods: {
+			onPageMounted() {
+				requestAnimationFrame(() => {
+					this.$nextTick(() => {
+						uni.pageScrollTo({
+							scrollTop: this.scrollPositions[this.currentPage] || 0,
+							duration: 0
+						});
+					});
+				});
+			},
+			toggleSidebar() {
+				this.sidebarVisible = !this.sidebarVisible;
+			},
+			closeSidebar() {
+				this.sidebarVisible = false;
+			},
 			inptConfirm() {
 				let ok = DataManager.checkPassword(this.password);
 				if (ok) {
@@ -200,44 +199,45 @@
 				}
 			},
 			switchPage(item) {
-				if (item.key == "import") {
-					DataManager.importFile();
-					return;
-				}
-				if (item.key == "export") {
-					DataManager.exportFile();
-					return;
-				}
-				if (item.key == "exit") {
-					const sys = uni.getSystemInfoSync();
-					if (
-						(sys.platform === 'android' || sys.platform === 'ios') &&
-						typeof plus !== 'undefined' &&
-						plus.runtime
-					) {
-						plus.runtime.quit();
+				this.closeSidebar();
+				setTimeout(() => {
+					// 处理页面切换逻辑
+					if (item.key === "import") {
+						DataManager.importFile();
+						return;
 					}
-					return;
-				}
-				if (process.env.UNI_PLATFORM === 'h5') {
+					if (item.key === "export") {
+						DataManager.exportFile();
+						return;
+					}
+					if (item.key === "exit") {
+						const sys = uni.getSystemInfoSync();
+						if ((sys.platform === 'android' || sys.platform === 'ios') && typeof plus !==
+							'undefined' && plus
+							.runtime) {
+							plus.runtime.quit();
+						}
+						return;
+					}
 					this.currentPage = item.key;
-					title.value = item.title;
-					location.hash = `#${item.key}|${encodeURIComponent(item.title)}`;
-				} else {
-					Utils.page_stack.push({
-						key: this.currentPage,
-						title: title.value
-					});
-					this.currentPage = item.key;
-					title.value = item.title;
-				}
+					this.title = item.title;
+
+					if (process.env.UNI_PLATFORM === 'h5') {
+						location.hash = `#${item.key}|${encodeURIComponent(item.title)}`;
+					} else {
+						Utils.page_stack.push({
+							key: this.currentPage,
+							title: this.title
+						});
+					}
+				}, 150);
 			},
 
 			updateSetPassword(flag) {
-				for (let item of sidebaItems.value) {
+				for (let item of this.sidebaItems) {
 					if (item.key == "setpassword") {
 						item.title = DataManager.hasPassword() ? "修改密码" : "创建密码";
-						title.value = item.title;
+						this.title = item.title;
 						return;
 					}
 				}
@@ -253,7 +253,7 @@
 				if (this.currentPage === key) return;
 				this.currentPage = key;
 				t_title = decodeURIComponent(t_title);
-				t_title && (title.value = t_title);
+				t_title && (this.title = t_title);
 			}
 		},
 
@@ -279,11 +279,14 @@
 			if (Utils.page_stack.length > 0) {
 				let item = Utils.page_stack.pop();
 				this.currentPage = item.key;
-				title.value = item.title;
+				this.title = item.title;
 				return true;
 			}
 			return false;
-		}
+		},
+		onPageScroll: function(e) {
+			this.scrollPositions[this.currentPage] = e.scrollTop;
+		},
 	}
 </script>
 

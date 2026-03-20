@@ -76,6 +76,7 @@
 	const TEMP_VIAR = VIAR_TREE.getTempViar();
 
 	export default {
+		emits: ['pageMounted'],
 		data() {
 			return {
 				Utils,
@@ -147,9 +148,9 @@
 					}
 				} else {
 					if (html == "") {
-						
+
 					} else if (TEMP_VIAR.title == "") {
-						
+
 					} else {
 						VIAR_TREE.newNode(
 							TEMP_VIAR.parent,
@@ -263,8 +264,9 @@
 				VIAR_TREE.srhing_node = 0;
 				break;
 			}
-
+			this.$emit('page-mounted');
 		},
+		unmounted() {},
 	}
 </script>
 

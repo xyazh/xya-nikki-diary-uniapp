@@ -1,4 +1,4 @@
-<template>
+<template @scroll="onScroll">
 	<view class="diary-status-box" :class="{ 'diary-status-box-on': status_box_on }">
 		<view class="diary-srh-box" :class="{ 'diary-srh-line-on': status_box_on }">
 			<view class="stat">
@@ -75,6 +75,7 @@
 	const COUNT_TEXT = NIKKIS.getCountText();
 	const SRH_ON = NIKKIS.getSrhON();
 	export default {
+		emits: ['page-mounted'],
 		data() {
 			return {
 				NIKKIS: NIKKIS,
@@ -122,13 +123,16 @@
 			},
 		},
 		mounted() {
-		    setTimeout(() => {
-		        this.loaded = true;
-		    }, 500);
+			this.loaded = true;
+			this.$emit('page-mounted');
 		},
 		unmounted() {
 			this.loaded = false;
 		},
+		onScroll(e) {
+			this.scrollPositions[this.currentPage] = e.detail.scrollTop;
+			console.log(e.detail.scrollTop);
+		}
 	}
 </script>
 

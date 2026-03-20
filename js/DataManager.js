@@ -75,7 +75,7 @@ class DataManager {
 				title: `导出成功: ${path}`,
 				icon: 'none'
 			});
-			DataManager.shareFile(path);;
+			DataManager.shareFile(path);
 		}
 	}
 
@@ -90,8 +90,20 @@ class DataManager {
 		intent.setType('*/*');
 		intent.putExtra(Intent.EXTRA_STREAM, uri);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 		const chooser = Intent.createChooser(intent, '分享文件');
 		plus.android.runtimeMainActivity().startActivity(chooser);
+		uni.shareWithSystem({
+		  summary: '',
+		  href: 'https://uniapp.dcloud.io',
+		  success(){
+		    // 分享完成，请注意此时不一定是成功分享
+		  },
+		  fail(){
+		    // 分享失败
+		  }
+		})
+
 	}
 
 	static importFile() {
