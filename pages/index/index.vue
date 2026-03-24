@@ -150,14 +150,23 @@
 		},
 		methods: {
 			onPageMounted() {
-				requestAnimationFrame(() => {
+				if (process.env.UNI_PLATFORM === 'h5') {
+					requestAnimationFrame(() => {
+						this.$nextTick(() => {
+							uni.pageScrollTo({
+								scrollTop: this.scrollPositions[this.currentPage] || 0,
+								duration: 0
+							});
+						});
+					});
+				} else {
 					this.$nextTick(() => {
 						uni.pageScrollTo({
 							scrollTop: this.scrollPositions[this.currentPage] || 0,
 							duration: 0
 						});
 					});
-				});
+				}
 			},
 			toggleSidebar() {
 				this.sidebarVisible = !this.sidebarVisible;
