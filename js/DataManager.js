@@ -70,7 +70,6 @@ class DataManager {
 			fos.write(javaStr.getBytes('UTF-8'));
 			fos.close();
 			const path = file.getAbsolutePath();
-			console.log('文件路径:', path);
 			uni.showToast({
 				title: `导出成功: ${path}`,
 				icon: 'none'
@@ -79,32 +78,20 @@ class DataManager {
 		}
 	}
 
-	static shareFile(path) {
-		if (process.env.UNI_PLATFORM !== 'app') return;
-		const Intent = plus.android.importClass('android.content.Intent');
-		const Uri = plus.android.importClass('android.net.Uri');
-		const File = plus.android.importClass('java.io.File');
-		const file = new File(path);
-		const uri = Uri.fromFile(file);
-		const intent = new Intent(Intent.ACTION_SEND);
-		intent.setType('*/*');
-		intent.putExtra(Intent.EXTRA_STREAM, uri);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-		const chooser = Intent.createChooser(intent, '分享文件');
-		plus.android.runtimeMainActivity().startActivity(chooser);
-		uni.shareWithSystem({
-		  summary: '',
-		  href: 'https://uniapp.dcloud.io',
-		  success(){
-		    // 分享完成，请注意此时不一定是成功分享
-		  },
-		  fail(){
-		    // 分享失败
-		  }
-		})
-
+	static shareFile(filePath) {
+		if (!filePath) {
+		        console.error("文件路径不能为空");
+		        return;
+		    }
+		    // 转成本地系统可访问路径
+		    const localPath = plus.io.convertLocalFileSystemURL(filePath);
+		    plus.runtime.openFile(localPath, function(res) {
+		        console.log("打开成功");
+		    }, function(err) {
+		        console.error("打开失败：" + JSON.stringify(err));
+		    });
 	}
+
 
 	static importFile() {
 		if (process.env.UNI_PLATFORM === 'h5') {

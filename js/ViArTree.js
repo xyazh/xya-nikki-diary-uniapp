@@ -15,6 +15,7 @@ const RENDER_LIST = reactive([]);
 const RENDER_TAGS = reactive({});
 const SRHING_TAGS = reactive({});
 const TAGS = {};
+const VIAR_ON = ref(false);
 
 const SRH_TEXT = ref("");
 
@@ -61,6 +62,10 @@ const ViArTree = function() {
 
 	this.getTempViar = () => {
 		return TEMP_VIAR;
+	}
+	
+	this.getViarOn = () =>{
+		return VIAR_ON;
 	}
 
 	this.initRenderList = () => {

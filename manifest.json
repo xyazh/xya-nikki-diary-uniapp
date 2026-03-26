@@ -1,9 +1,9 @@
 {
-    "name" : "xya日记",
-    "appid" : "__UNI__7AB8A58",
-    "description" : "xya-nikki-diary日记",
-    "versionName" : "1.0.1",
-    "versionCode" : 101,
+    "name" : "xya-nikki-diary",
+    "appid" : "__UNI__E2CB7D1",
+    "description" : "xya日记",
+    "versionName" : "1.0.2",
+    "versionCode" : 102,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -37,77 +37,16 @@
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
                     "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
                     "<uses-feature android:name=\"android.hardware.camera\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>",
-                    "",
-                    "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
-                    "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
-                    "<uses-permission android:name=\"android.permission.MANAGE_EXTERNAL_STORAGE\" />",
-                    "",
-                    "<provider",
-                    "    android:name=\"androidx.core.content.FileProvider\"",
-                    "    android:authorities=\"${applicationId}.fileprovider\"",
-                    "    android:exported=\"false\"",
-                    "    android:grantUriPermissions=\"true\">",
-                    "    <meta-data",
-                    "        android:name=\"android.support.FILE_PROVIDER_PATHS\"",
-                    "        android:resource=\"@xml/file_paths\" />",
-                    "</provider>",
-                    "",
-                    "",
-                    "",
-                    ""
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ],
                 "abiFilters" : [ "armeabi-v7a", "arm64-v8a", "x86" ]
             },
             /* ios打包配置 */
             "ios" : {
-                "dSYMs" : false,
-                "idfa" : false
+                "dSYMs" : false
             },
             /* SDK配置 */
-            "sdkConfigs" : {
-                "share" : {}
-            },
-            "splashscreen" : {
-                "androidStyle" : "common",
-                "android" : {
-                    "hdpi" : "C:/Users/33023/Desktop/icon/xM.png",
-                    "xhdpi" : "C:/Users/33023/Desktop/icon/xM.png",
-                    "xxhdpi" : "C:/Users/33023/Desktop/icon/xM.png"
-                },
-                "iosStyle" : "common",
-                "ios" : {
-                    "iphone" : {
-                        "portrait-896h@3x" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "landscape-896h@3x" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "portrait-896h@2x" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "landscape-896h@2x" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "iphonex" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "iphonexl" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "retina55" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "retina55l" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "retina47" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "retina47l" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "retina40" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "retina40l" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "retina35" : "C:/Users/33023/Desktop/icon/xM.png"
-                    },
-                    "storyboard" : "C:/Users/33023/Desktop/icon/xM.png",
-                    "ipad" : {
-                        "portrait-1366h@2x" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "landscape-1366h@2x" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "portrait-1194h@2x" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "landscape-1194h@2x" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "portrait-1112h@2x" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "landscape-1112h@2x" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "portrait-retina7" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "landscape-retina7" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "portrait7" : "C:/Users/33023/Desktop/icon/xM.png",
-                        "landscape7" : "C:/Users/33023/Desktop/icon/xM.png"
-                    }
-                }
-            },
+            "sdkConfigs" : {},
             "icons" : {
                 "android" : {
                     "hdpi" : "unpackage/res/icons/72x72.png",
@@ -165,9 +104,13 @@
         "enable" : false
     },
     "vueVersion" : "3",
-    "locale" : "zh-Hans",
     "fallbackLocale" : "zh-Hans",
+    "locale" : "zh-Hans",
     "h5" : {
-        "title" : "xya-nikki-diary"
+        "title" : "xya-nikki-diary",
+        "router" : {
+            "mode" : "history",
+            "base" : "./"
+        }
     }
 }

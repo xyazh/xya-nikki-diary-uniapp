@@ -1,6 +1,6 @@
 <template>
-	<view class="viar-status-box" :class="{ 'viar-status-box-on': status_box_on }">
-		<view class="viar-srh-box" :class="{ 'viar-srh-line-on': status_box_on }">
+	<view class="viar-status-box" :class="{ 'viar-status-box-on': VIAR_ON }">
+		<view class="viar-srh-box" :class="{ 'viar-srh-line-on': VIAR_ON }">
 			<view class="stat">
 				<view class="stat-title">统计</view>
 				<view class="stat-sub">- 总计</view>
@@ -8,11 +8,11 @@
 			</view>
 			<view class="line"></view>
 			<text class="viar-srh-title">搜索条件</text>
-			<view class="viar-srh-line" :class="{ 'viar-srh-line-on': status_box_on }">
+			<view class="viar-srh-line" :class="{ 'viar-srh-line-on': VIAR_ON }">
 				<input v-model="SRH_TEXT" class="viar-srh-input" placeholder="搜索" />
 			</view>
 			<text class="viar-srh-title">Tags</text>
-			<view class="viar-srh-line" :class="{ 'viar-srh-line-on': status_box_on }">
+			<view class="viar-srh-line" :class="{ 'viar-srh-line-on': VIAR_ON }">
 				<input v-model="srh_tag" class="viar-srh-input" placeholder="搜索" />
 				<text class="viar-status-btn" @tap="srhTag()">搜索</text>
 			</view>
@@ -30,15 +30,15 @@
 			</view>
 		</view>
 		<view class="viar-status-btn-line">
-			<text v-if="status_box_on" class="viar-status-btn" @tap="unrsh()">重置</text>
-			<text v-if="status_box_on" class="viar-status-btn" @tap="srh()">搜索</text>
-			<text @click="openStatus()" class="viar-status-btn">{{status_box_on ? "收起" : "展开"}}</text>
+			<text v-if="VIAR_ON" class="viar-status-btn" @tap="unrsh()">重置</text>
+			<text v-if="VIAR_ON" class="viar-status-btn" @tap="srh()">搜索</text>
+			<text @click="openStatus()" class="viar-status-btn">{{VIAR_ON ? "收起" : "展开"}}</text>
 		</view>
 	</view>
 	<view v-if="!SRHING_MODE" class="fixed-button" @tap="openWriter()">
 		<image src="@/static/icon/ck.png" class="fixed-button-icon" mode="widthFix"></image>
 	</view>
-	<view class="viar-card-box" :class="{ 'vcb-offset': status_box_on }">
+	<view class="viar-card-box" :class="{ 'vcb-offset': VIAR_ON }">
 		<view class="viar-card" v-for="(item,index) in RENDER_LIST" :key="item.id" @tap="openItem(item.id)">
 			<view class="viar-text">{{item.time}}</view>
 			<view class="viar-title">{{item.title}}</view>
@@ -69,7 +69,7 @@
 	const SRHING_TAGS = VIAR_TREE.getSthingTag();
 	const SRH_TEXT = VIAR_TREE.getSrhText();
 	const TAGS = VIAR_TREE.getTags();
-
+	const VIAR_ON = VIAR_TREE.getViarOn();
 	const SRHING_MODE = ref(false);
 
 	export default {
@@ -81,7 +81,7 @@
 				RENDER_TAGS: RENDER_TAGS,
 				SRHING_TAGS: SRHING_TAGS,
 				SRHING_MODE: SRHING_MODE,
-				status_box_on: true,
+				VIAR_ON: VIAR_ON,
 				SRH_TEXT: SRH_TEXT,
 				srh_tag: "",
 			}
@@ -100,7 +100,7 @@
 				Utils.switchPage("writeviar", "写故事");
 			},
 			openStatus() {
-				this.status_box_on = !this.status_box_on;
+				VIAR_ON.value = !VIAR_ON.value;
 			},
 			srh() {
 				VIAR_TREE.useSearch(SRH_TEXT.value);
