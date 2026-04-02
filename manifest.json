@@ -1,7 +1,7 @@
 {
-    "name" : "xya-nikki-diary",
+    "name" : "xya日记",
     "appid" : "__UNI__E2CB7D1",
-    "description" : "xya日记",
+    "description" : "xya-nikki-diary",
     "versionName" : "1.0.2",
     "versionCode" : 102,
     "transformPx" : false,

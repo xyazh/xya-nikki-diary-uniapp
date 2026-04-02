@@ -38,6 +38,7 @@
 <script>
 	import {
 		ref,
+		markRaw,
 	} from "vue"
 	import home from '@/components/pages/home.vue'
 	import nikki from '@/components/pages/nikki.vue'
@@ -56,7 +57,7 @@
 	import DataManager from '@/js/DataManager';
 
 	if (process.env.UNI_PLATFORM === 'h5') {
-		location.hash = `#home|${encodeURIComponent('主页')}`;
+		location.hash = `#home`;
 	}
 	export default {
 		data() {
@@ -119,19 +120,25 @@
 					}
 				],
 				pages: {
-					home,
-					nikki,
-					readnikki,
-					writenikki,
-					tekoki,
-					viar,
-					readviar,
-					writeviar,
-					passwordbook,
-					setpassword,
-					settings,
-					about
+					home: markRaw(home),
+					nikki: markRaw(nikki),
+					readnikki: markRaw(readnikki),
+					writenikki: markRaw(writenikki),
+					tekoki: markRaw(tekoki),
+					viar: markRaw(viar),
+					readviar: markRaw(readviar),
+					writeviar: markRaw(writeviar),
+					passwordbook: markRaw(passwordbook),
+					setpassword: markRaw(setpassword),
+					settings: markRaw(settings),
+					about: markRaw(about)
 				},
+				pages_back: {
+					readnikki: ["nikki", "日记"],
+					writenikki: ["nikki", "日记"],
+					readviar: ["viar", "故事集"],
+					writeviar: ["viar", "故事集"],
+				}
 			};
 		},
 		components: {
@@ -232,7 +239,7 @@
 					this.title = item.title;
 
 					if (process.env.UNI_PLATFORM === 'h5') {
-						location.hash = `#${item.key}|${encodeURIComponent(item.title)}`;
+						location.hash = `#${item.key}`;
 					} else {
 						Utils.page_stack.push({
 							key: this.currentPage,
@@ -253,16 +260,25 @@
 			},
 
 			onHashchange() {
-				const hash = location.hash.replace('#', '');
-				if (!hash) return;
-				let [key, t_title] = hash.split('|');
-				if (key === undefined || t_title === undefined) {
+				let hash = location.hash.replace('#', '');
+				console.log(hash);
+				if(!hash){
+					this.currentPage = "home";
+					location.hash = `#${this.currentPage}`;
 					return;
 				}
-				if (this.currentPage === key) return;
-				this.currentPage = key;
-				t_title = decodeURIComponent(t_title);
-				t_title && (this.title = t_title);
+				if (this.currentPage == hash) {
+					return;
+				}
+				let back_page = this.pages_back[this.currentPage];
+				if (back_page) {
+					this.currentPage = back_page[0];
+					this.title = back_page[1];
+				} else {
+					this.currentPage = "home";
+					this.title = "主页";
+				}
+				location.hash = `#${this.currentPage}`;
 			}
 		},
 
@@ -271,7 +287,7 @@
 			Utils.registerUpdateSetPassword(this.updateSetPassword);
 			if (process.env.UNI_PLATFORM === 'h5') {
 				if (!location.hash) {
-					location.hash = `#${item.key}|${encodeURIComponent(item.title)}`;
+					location.hash = `#${item.key}`;
 				}
 				window.addEventListener('hashchange', this.onHashchange);
 			}
@@ -285,13 +301,18 @@
 			Utils.onReachBottom();
 		},
 		onBackPress() {
-			if (Utils.page_stack.length > 0) {
-				let item = Utils.page_stack.pop();
-				this.currentPage = item.key;
-				this.title = item.title;
-				return true;
+			if (this.currentPage == "home") {
+				return false;
 			}
-			return false;
+			let back_page = this.pages_back[this.currentPage];
+			if (back_page) {
+				this.currentPage = back_page[0];
+				this.title = back_page[1];
+			} else {
+				this.currentPage = "home";
+				this.title = "主页";
+			}
+			return true;
 		},
 		onPageScroll: function(e) {
 			this.scrollPositions[this.currentPage] = e.scrollTop;
@@ -399,7 +420,6 @@
 		margin-left: 42rpx;
 	}
 
-	/* 页面内容 */
 	.page-content {
 		padding-top: calc($status-bar-height + $topbar-height);
 		min-height: calc(100vh - $status-bar-height - $topbar-height);

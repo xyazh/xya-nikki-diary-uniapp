@@ -1,30 +1,32 @@
 <template>
 	<input class="viar-title-input" v-model="TEMP_VIAR.title" placeholder="标题" />
-	<!-- 工具栏 -->
-	<view v-show="input_mode">
-		<view class="editor-toolbar">
-			<view class="editor-toolbar__item" @click="setBold">
-				<text class="editor-toolbar__text bold">B</text>
-			</view>
+	<view class="viar-body-input">
+		<!-- 工具栏 -->
+		<view v-show="input_mode">
+			<view class="editor-toolbar">
+				<view class="editor-toolbar__item" @click="setBold">
+					<text class="editor-toolbar__text bold">B</text>
+				</view>
 
-			<view class="editor-toolbar__item" @click="setItalic">
-				<text class="editor-toolbar__text italic">I</text>
-			</view>
+				<view class="editor-toolbar__item" @click="setItalic">
+					<text class="editor-toolbar__text italic">I</text>
+				</view>
 
-			<view class="editor-toolbar__item" @click="setStrike">
-				<text class="editor-toolbar__text delete">划去</text>
-			</view>
+				<view class="editor-toolbar__item" @click="setStrike">
+					<text class="editor-toolbar__text delete">划去</text>
+				</view>
 
-			<view class="editor-toolbar__item" @click="setSpoiler">
-				<text class="editor-toolbar__text">防剧透</text>
+				<view class="editor-toolbar__item" @click="setSpoiler">
+					<text class="editor-toolbar__text">防剧透</text>
+				</view>
 			</view>
+			<editor id="editor" class="viar-editor" :class="{ 'viar-editor-full': full }" placeholder="写些什么罢"
+				@ready="onEditorReady" @input="onEditorInput"></editor>
 		</view>
-		<editor id="editor" class="viar-editor" :class="{ 'viar-editor-full': full }" placeholder="写些什么罢"
-			@ready="onEditorReady" @input="onEditorInput"></editor>
+		<textarea v-show="!input_mode" v-model="TEMP_VIAR.text" class="viar-editor"
+			:class="{ 'viar-editor-full': full }" placeholder="写些什么罢" :maxlength="-1"></textarea>
+		<view class="viar-divider"></view>
 	</view>
-	<textarea v-show="!input_mode" v-model="TEMP_VIAR.text" class="viar-editor" :class="{ 'viar-editor-full': full }"
-		placeholder="写些什么罢" :maxlength="-1"></textarea>
-	<view class="divider"></view>
 	<view class="writeviar-btn-line">
 		<text class="writeviar-title-btn" @tap="smode()">切换</text>
 		<text class="writeviar-title-btn" @tap="sfull()">全屏</text>
@@ -46,15 +48,15 @@
 			<view class="viar-tag-text">{{ tag_name }}</view>
 		</view>
 	</view>
-	<view class="divider"></view>
+	<view class="viar-divider"></view>
 	<view class="writeviar-node">{{TEMP_VIAR.parent.format()}}</view>
 	<text class="writeviar-btn" @tap="selectParent()">父节点</text>
-	<view class="divider"></view>
+	<view class="viar-divider"></view>
 	<view v-for="(node,index) in TEMP_VIAR.links" :key="node.id" class="writeviar-node" @tap="unSelectLink(node,index)">
 		{{node.format()}}
 	</view>
 	<text class="writeviar-btn" @tap="selectLink()">链接</text>
-	<view class="divider"></view>
+	<view class="viar-divider"></view>
 	<input class="viar-meta-input" v-model="TEMP_VIAR.meta" placeholder="编辑meta" />
 	<view class="fixed-button" @tap="viarSave()">
 		<image src="@/static/icon/8z.png" class="fixed-button-icon" mode="widthFix"></image>
@@ -76,7 +78,7 @@
 	const TEMP_VIAR = VIAR_TREE.getTempViar();
 
 	export default {
-		emits: ['pageMounted'],
+		emits: ['page-mounted'],
 		data() {
 			return {
 				Utils,
@@ -348,24 +350,31 @@
 		align-items: center;
 	}
 
-	.divider {
-		height: 1px;
-		background-color: #333;
-		margin: 1px 10rpx;
+	.viar-body-input {
+		padding: 10rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
 	}
 
 	.viar-editor {
-		width: 100%;
 		min-height: 50vh;
 		font-size: 30rpx;
 		line-height: 40rpx;
 		color: #000;
-		margin: 10rpx;
+		width: 100%;
 	}
 
 	.viar-editor-full {
-		width: 100vh;
 		height: 100vh;
+	}
+
+	.viar-divider {
+		height: 1px;
+		background-color: #333;
+		margin: 1px 10rpx;
+		width: 100%;
 	}
 
 	.editor-toolbar {
@@ -374,18 +383,23 @@
 		margin: 20rpx 0;
 		width: 100%;
 		display: flex;
+		justify-content: flex-start;
 		align-items: center;
 		background-color: #ececec;
 		font-size: 16px;
 		color: #525252;
+		padding: 0 10rpx;
+		box-sizing: border-box;
+		overflow: hidden;
 	}
 
 	.editor-toolbar__item {
-		padding: 0 6px;
 		cursor: pointer;
 		white-space: nowrap;
-		margin: 0 10rpx;
+		padding: 0 12rpx;
 	}
+
+
 
 	.editor-toolbar__text {
 		display: inline-block;

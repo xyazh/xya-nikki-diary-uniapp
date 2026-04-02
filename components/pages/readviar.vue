@@ -169,7 +169,6 @@
 	.readviar-title-text-box {
 		display: flex;
 		flex-direction: column;
-		width: 100%;
 		overflow: hidden;
 		height: 0;
 		transition: height 0.3s ease;
@@ -233,22 +232,34 @@
 	.readviarviar-title-text {
 		margin-top: 10rpx;
 		display: flex;
-		width: 100%;
-		height: 40rpx;
-		line-height: 40rpx;
-		color: #000;
 		align-items: center;
-		justify-content: center;
+		height: 100%;
+		min-width: 100%;
+		width: 100%;
+		line-height: 44rpx;
 		font-size: 38rpx;
+		color: #000;
+		text-align: center;
+		white-space: nowrap;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+		padding: 0 5rpx;
 	}
+
+
 
 	.readviar-box {
 		width: 100%;
+		padding: 0 10rpx;
 		margin-top: calc(5rpx + $readviar-length-box-height + $readviar-status-box-height-off);
 		transition: margin-top 0.3s ease;
 		font-size: 30rpx;
 		line-height: 40rpx;
+		box-sizing: border-box;
+		word-break: break-all;
 	}
+
 
 	.rvcb-offset {
 		margin-top: calc(5rpx + $readviar-length-box-height + $readviar-status-box-height-on);

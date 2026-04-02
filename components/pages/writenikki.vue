@@ -148,8 +148,10 @@
 		font-size: 30rpx;
 		line-height: 40rpx;
 		color: #000;
-		margin: 10rpx;
+		padding: 10rpx;
+		box-sizing: border-box;
 	}
+
 
 	/* 分割线 */
 	.divider {
