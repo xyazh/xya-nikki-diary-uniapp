@@ -5,7 +5,7 @@ import {
 
 const Utils = {};
 
-const version = "1.0.2";
+const version = "1.0.3";
 const _ON_REACH_BOTTOM = {};
 
 let _SWITCH_PAGE = null;
