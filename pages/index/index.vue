@@ -261,7 +261,6 @@
 
 			onHashchange() {
 				let hash = location.hash.replace('#', '');
-				console.log(hash);
 				if(!hash){
 					this.currentPage = "home";
 					location.hash = `#${this.currentPage}`;
