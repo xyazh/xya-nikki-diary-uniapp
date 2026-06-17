@@ -1,62 +1,73 @@
 <template @scroll="onScroll">
-	<view class="diary-status-box" :class="{ 'diary-status-box-on': status_box_on }">
+	<view class="diary-status-box" :class="{ 'diary-status-box-on': status_box_on }"
+		:style="{ backgroundColor: COLORS.BG}">
 		<view class="diary-srh-box" :class="{ 'diary-srh-line-on': status_box_on }">
 			<view class="stat">
-				<view class="stat-title">统计</view>
-				<view class="stat-sub">- 总计</view>
-				<text class="stat-line">总字数：{{COUNT_TEXT}}</text>
+				<view class="stat-title" :style="{ color: COLORS.SUB_TITLE}">统计</view>
+				<view class="stat-sub" :style="{ color: COLORS.SUB_ITEM}">- 总计</view>
+				<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">总字数：{{COUNT_TEXT}}</text>
 			</view>
-			<view class="diary-srh-line" :class="{ 'diary-srh-line-on': status_box_on }">
+			<view class="diary-srh-line" :class="{ 'diary-srh-line-on': status_box_on }"
+				:style="{ color: COLORS.BG_TEXT1}">
 				<input v-model="srh_text" class="diary-srh-input" placeholder="搜索" />
 			</view>
 		</view>
 		<view class="diary-status-btn-line">
-			<text v-if="status_box_on" class="diary-status-btn" @tap="srh()">搜索</text>
-			<text v-if="status_box_on" class="diary-status-btn" @tap="unrsh()">重置</text>
-			<text @click="openStatus()" class="diary-status-btn">{{status_box_on ? "收起" : "展开"}}</text>
+			<text v-if="status_box_on" class="diary-status-btn" :style="{ color: COLORS.BTN_TEXT2}"
+				@tap="srh()">搜索</text>
+			<text v-if="status_box_on" class="diary-status-btn" :style="{ color: COLORS.BTN_TEXT2}"
+				@tap="unrsh()">重置</text>
+			<text @click="openStatus()" class="diary-status-btn"
+				:style="{ color: COLORS.BTN_TEXT2}">{{status_box_on ? "收起" : "展开"}}</text>
 		</view>
 	</view>
-	<view class="diary-length-box" :class="{ 'dlb-offset': status_box_on }">
-		<text class="diary-length">共{{SRH_ON ? RENDER_NIKKI_LIST.length : NIKKI_LIST.length}}篇</text>
+	<view class="diary-length-box" :class="{ 'dlb-offset': status_box_on }" :style="{ backgroundColor: COLORS.BG}">
+		<text class="diary-length"
+			:style="{ color: COLORS.DIS_TEXT}">共{{SRH_ON ? RENDER_NIKKI_LIST.length : NIKKI_LIST.length}}篇</text>
 	</view>
-	<view class="fixed-button" @tap="openWriter()">
-		<image src="@/static/icon/ck.png" class="fixed-button-icon" mode="widthFix"></image>
+	<view class="fixed-button" :style="{ backgroundColor: COLORS.MAIN}" @tap="openWriter()">
+		<image src="@/static/icon/ck.png" class="fixed-button-icon" :style="{filter: COLORS.IMGF2}" mode="widthFix">
+		</image>
 	</view>
 	<view v-show="!SRH_ON" v-if="loaded" class="diary-card-box" :class="{ 'dcb-offset': status_box_on }">
-		<view class="diary-card" v-for="(item,index) in NIKKI_LIST" :key="item.id" @tap="openItem(item)">
+		<view class="diary-card" :style="{ backgroundColor: COLORS.BG_CARD}" v-for="(item,index) in NIKKI_LIST"
+			:key="item.id" @tap="openItem(item)">
 			<view class="card-content">
 				<view class="date-box">
-					<text class="day">{{item.day}}</text>
+					<text class="day" :style="{ color: COLORS.DIS_TEXT}">{{item.day}}</text>
 					<br>
-					<text class="month-week">{{item.month}}月 {{item.week}}</text>
+					<text class="month-week" :style="{ color: COLORS.DIS_TEXT}">{{item.month}}月 {{item.week}}</text>
 				</view>
 				<view class="content-box">
-					<text class="year" v-if="item.year !== CURRENT_YEAR">{{item.year}}</text>
-					<text class="text" :class="{ expanded: activeId === item.id }">
+					<text class="year" :style="{ color: COLORS.DIS_TEXT}"
+						v-if="item.year !== CURRENT_YEAR">{{item.year}}</text>
+					<text class="text" :class="{ expanded: activeId === item.id }" :style="{ color: COLORS.TEXT}">
 						{{ item.text }}
 					</text>
-					<text class="time"
+					<text class="time" :style="{ color: COLORS.DIS_TEXT}"
 						@tap.stop="expandItem(item)">{{Utils.addZero(item.hours)}}:{{Utils.addZero(item.minu)}}</text>
 				</view>
 			</view>
 		</view>
 	</view>
 	<view v-show="SRH_ON" class="diary-card-box" :class="{ 'dcb-offset': status_box_on }">
-		<view class="diary-card" v-for="(item,index) in RENDER_NIKKI_LIST" :key="index" @tap="openItem(item)">
+		<view class="diary-card" :style="{ backgroundColor: COLORS.BG_CARD}" v-for="(item,index) in RENDER_NIKKI_LIST"
+			:key="index" @tap="openItem(item)">
 			<view class="card-content">
 				<!-- 左侧日期 -->
 				<view class="date-box">
-					<text class="day">{{item.day}}</text>
+					<text class="day" :style="{ color: COLORS.DIS_TEXT}">{{item.day}}</text>
 					<br>
-					<text class="month-week">{{item.month}}月 {{item.week}}</text>
+					<text class="month-week" :style="{ color: COLORS.DIS_TEXT}">{{item.month}}月 {{item.week}}</text>
 				</view>
 				<!-- 右侧内容 -->
 				<view class="content-box">
-					<text class="year" v-if="item.year !== CURRENT_YEAR">{{item.year}}</text>
-					<text class="text" :class="{ expanded: activeId === item.id }">
+					<text class="year" :style="{ color: COLORS.DIS_TEXT}"
+						v-if="item.year !== CURRENT_YEAR">{{item.year}}</text>
+					<text class="text" :class="{ expanded: activeId === item.id }" :style="{ color: COLORS.TEXT}">
 						{{ item.text }}
 					</text>
-					<text class="time"
+					<text class="time" :style="{ color: COLORS.DIS_TEXT}"
 						@tap.stop="expandItem(item)">{{Utils.addZero(item.hours)}}:{{Utils.addZero(item.minu)}}</text>
 				</view>
 			</view>
@@ -67,7 +78,7 @@
 <script>
 	import Nikkis from '@/js/Nikkis.js'
 	import Utils from '@/js/Utils.js'
-
+	import COLORS from "@/js/Colors.js";
 
 	const NIKKIS = Nikkis;
 	const NIKKI_LIST = NIKKIS.getNikkiList();
@@ -89,6 +100,7 @@
 				SRH_ON: SRH_ON,
 				srh_text: "",
 				loaded: false,
+				COLORS: COLORS,
 			}
 		},
 		methods: {
@@ -138,7 +150,6 @@
 
 
 <style lang="scss">
-	$dis-text-color: #757575;
 	$diary-length-box-height: 64rpx;
 	$diary-status-box-height-off: 64rpx;
 	$diary-status-box-height-on: 260rpx;
@@ -153,7 +164,6 @@
 		left: calc(100% - 160rpx);
 		width: 110rpx;
 		height: 110rpx;
-		background-color: #77aaff;
 		box-shadow: 0 4rpx 6rpx rgba(0, 0, 0, 0.2);
 		z-index: 1;
 	}
@@ -161,7 +171,6 @@
 	.fixed-button-icon {
 		width: 105rpx;
 		height: 105rpx;
-		filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(233deg) brightness(106%) contrast(101%);
 	}
 
 	.diary-status-box {
@@ -169,8 +178,7 @@
 		width: 100%;
 		display: block;
 		height: $diary-status-box-height-off;
-		background-color: #fff;
-		border-bottom: 1rpx solid #ddd;
+		border-bottom: 1px solid #777;
 		transition: height 0.3s ease;
 	}
 
@@ -191,7 +199,6 @@
 		margin: 0 20rpx;
 		height: $diary-status-box-height-off;
 		line-height: $diary-status-box-height-off;
-		color: #2da7ff;
 		display: flex;
 		justify-content: right;
 		align-items: center;
@@ -236,13 +243,11 @@
 		align-items: center;
 		margin-top: $diary-status-box-height-off;
 		height: $diary-length-box-height;
-		background-color: #fff;
 		border-top: 1rpx solid #ddd;
 		transition: margin-top 0.3s ease;
 	}
 
 	.diary-length {
-		color: $dis-text-color;
 		font-size: 26rpx;
 	}
 
@@ -276,12 +281,10 @@
 	.day {
 		font-size: 52rpx;
 		line-height: 52rpx;
-		color: $dis-text-color;
 	}
 
 	.month-week {
 		font-size: 24rpx;
-		color: $dis-text-color;
 		white-space: nowrap;
 		/* 不换行 */
 	}
@@ -296,7 +299,6 @@
 
 	.year {
 		font-size: 24rpx;
-		color: $dis-text-color;
 	}
 
 	.text {
@@ -321,7 +323,6 @@
 
 	.time {
 		font-size: 24rpx;
-		color: $dis-text-color;
 		align-self: flex-start;
 		width: 100%;
 	}
@@ -339,7 +340,6 @@
 	}
 
 	.stat-title {
-		color: #77aaff;
 		font-size: 28rpx;
 		margin-bottom: 10rpx;
 		font-weight: bold;
@@ -347,7 +347,6 @@
 
 	.stat-sub {
 		font-weight: bold;
-		color: #666666;
 		margin: 5rpx 0;
 		font-size: 26rpx;
 	}
@@ -355,7 +354,6 @@
 	.stat-line {
 		display: block;
 		font-size: 26rpx;
-		color: #666666;
 		margin: 5rpx 0;
 	}
 </style>

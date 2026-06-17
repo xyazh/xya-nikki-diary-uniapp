@@ -1,29 +1,32 @@
 <template>
-	<view class="diary-read-length-box">
-		<text class="diary-length">共{{Utils.read_nikki.text.length}}字</text>
+	<view class="diary-read-length-box" :style="{ backgroundColor: COLORS.BG}">
+		<text class="diary-length"  :style="{ color: COLORS.DIS_TEXT}">共{{Utils.read_nikki.text.length}}字</text>
 	</view>
 
-	<view class="fixed-button" @tap="openWriter()">
-		<image src="@/static/icon/6G.png" class="fixed-button-icon" mode="widthFix"></image>
+	<view class="fixed-button" :style="{ backgroundColor: COLORS.MAIN}" @tap="openWriter()">
+		<image src="@/static/icon/6G.png" class="fixed-button-icon" :style="{filter: COLORS.IMGF2}" mode="widthFix">
+		</image>
 	</view>
 
 	<view class="diary-read-card-box">
-		<view class="diary-card">
+		<view class="diary-card" :style="{ backgroundColor: COLORS.BG_CARD}" >
 			<view class="card-content">
 				<!-- 左侧日期 -->
 				<view class="date-box">
-					<text class="day">{{Utils.read_nikki.day}}</text>
+					<text class="day" :style="{ color: COLORS.DIS_TEXT}">{{Utils.read_nikki.day}}</text>
 					<br>
-					<text class="month-week">{{Utils.read_nikki.month}}月 {{Utils.read_nikki.week}}</text>
+					<text class="month-week" :style="{ color: COLORS.DIS_TEXT}">{{Utils.read_nikki.month}}月
+						{{Utils.read_nikki.week}}</text>
 				</view>
 				<!-- 右侧内容 -->
 				<view class="content-box">
-					<text class="year" v-if="Utils.read_nikki.year !== CURRENT_YEAR">{{Utils.read_nikki.year}}</text>
-					<text class="read-nikki-text">
+					<text class="year" :style="{ color: COLORS.DIS_TEXT}"
+						v-if="Utils.read_nikki.year !== CURRENT_YEAR">{{Utils.read_nikki.year}}</text>
+					<text class="read-nikki-text"  :style="{ color: COLORS.TEXT}">
 						{{Utils.read_nikki.text}}
 					</text>
-					<text
-						class="time">{{Utils.addZero(Utils.read_nikki.hours)}}:{{Utils.addZero(Utils.read_nikki.minu)}}</text>
+					<text class="time"
+						:style="{ color: COLORS.DIS_TEXT}">{{Utils.addZero(Utils.read_nikki.hours)}}:{{Utils.addZero(Utils.read_nikki.minu)}}</text>
 				</view>
 			</view>
 		</view>
@@ -32,12 +35,14 @@
 
 <script>
 	import Utils from '@/js/Utils.js'
+	import COLORS from "@/js/Colors.js";
 	export default {
 		emits: ['page-mounted'],
 		data() {
 			return {
 				Utils,
-				CURRENT_YEAR: new Date().getFullYear()
+				CURRENT_YEAR: new Date().getFullYear(),
+				COLORS: COLORS,
 			}
 		},
 		methods: {
@@ -57,13 +62,11 @@
 
 
 <style lang="scss">
-	$dis-text-color: #757575;
 	$diary-length-box-height: 64rpx;
 
 	.fixed-button-icon {
 		width: 105rpx;
 		height: 105rpx;
-		filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(233deg) brightness(106%) contrast(101%);
 	}
 
 	.fixed-button {
@@ -75,7 +78,6 @@
 		left: calc(100% - 160rpx);
 		width: 110rpx;
 		height: 110rpx;
-		background-color: #77aaff;
 		box-shadow: 0 4rpx 6rpx rgba(0, 0, 0, 0.2);
 		z-index: 4;
 	}
@@ -87,11 +89,9 @@
 		justify-content: center;
 		align-items: center;
 		height: $diary-length-box-height;
-		background-color: #fff;
 	}
 
 	.diary-length {
-		color: $dis-text-color;
 		font-size: 26rpx;
 	}
 
@@ -100,7 +100,6 @@
 	}
 
 	.diary-card {
-		background-color: #fff;
 		margin-bottom: 10rpx;
 		margin-left: 10rpx;
 		margin-right: 10rpx;
@@ -124,14 +123,11 @@
 	.day {
 		font-size: 52rpx;
 		line-height: 52rpx;
-		color: $dis-text-color;
 	}
 
 	.month-week {
 		font-size: 24rpx;
-		color: $dis-text-color;
 		white-space: nowrap;
-		/* 不换行 */
 	}
 
 	.content-box {
@@ -144,7 +140,6 @@
 
 	.year {
 		font-size: 24rpx;
-		color: $dis-text-color;
 	}
 
 	.read-nikki-text {
@@ -158,7 +153,6 @@
 
 	.time {
 		font-size: 24rpx;
-		color: $dis-text-color;
 		align-self: flex-start;
 		width: 100%;
 	}

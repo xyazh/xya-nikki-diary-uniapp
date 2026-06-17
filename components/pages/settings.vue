@@ -17,8 +17,6 @@
 		<view class="setting-title">记录</view>
 		<view class="setting-item" @tap="clearEvents">清理事件</view>
 		<view class="setting-line"></view>
-		<view class="setting-item" @tap="deleteEvents">删除事件</view>
-		<view class="setting-line"></view>
 
 		<view class="setting-title">故事集</view>
 		<view class="setting-item" @tap="clearTags">清理TAG</view>

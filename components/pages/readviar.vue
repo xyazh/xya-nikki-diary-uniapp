@@ -1,16 +1,17 @@
 <template>
-	<view class="readviar-title-box" :class="{ 'readviar-title-box-on': title_box_on }">
+	<view class="readviar-title-box" :class="{ 'readviar-title-box-on': title_box_on }"
+		:style="{ backgroundColor: COLORS.BG}">
 		<view class="readviar-title-text-box" :class="{ 'readviar-title-text-box-on': title_box_on }">
-			<view class="readviarviar-text">{{node.id}}</view>
-			<view class="readviarviar-text">{{node.getTime()}}</view>
-			<view class="readviarviar-text">{{node.meta}}</view>
+			<view class="readviarviar-text" :style="{ color: COLORS.DIS_TEXT}">{{node.id}}</view>
+			<view class="readviarviar-text" :style="{ color: COLORS.DIS_TEXT}">{{node.getTime()}}</view>
+			<view class="readviarviar-text" :style="{ color: COLORS.DIS_TEXT}">{{node.meta}}</view>
 			<view class="viar-tag-box">
 				<view class="viar-tag" v-for="(tag_color,tag_name) in node.tags" :key="tag_name"
 					:style="{ backgroundColor: tag_color }">
 					<view class="viar-tag-text">{{ tag_name }}</view>
 				</view>
 			</view>
-			<view class="readviarviar-title-text">{{node.title}}</view>
+			<view class="readviarviar-title-text" :style="{ color: COLORS.TEXT}">{{node.title}}</view>
 		</view>
 		<view class="readviar-btn-line">
 			<text class="readviar-title-btn" @tap="openLink()">链接</text>
@@ -21,23 +22,28 @@
 	</view>
 	<view class="readviar-box" :class="{ 'rvcb-offset': title_box_on }" v-html="STYLE_CONTENT+node.content">
 	</view>
-	<view class="fixed-button" @tap="openWriter()" v-if="title_box_on">
-		<image src="@/static/icon/6G.png" class="fixed-button-icon" mode="widthFix"></image>
+	<view class="fixed-button" :style="{ backgroundColor: COLORS.MAIN}" @tap="openWriter()" v-if="title_box_on">
+		<image src="@/static/icon/6G.png" class="fixed-button-icon" :style="{filter: COLORS.IMGF2}" mode="widthFix">
+		</image>
 	</view>
 </template>
 
 <script>
 	import Utils from '@/js/Utils.js'
 	import VIAR_TREE from '@/js/ViArTree.js'
-
+	import COLORS from "@/js/Colors.js";
 	const STYLE_CONTENT = `
 	<style>	
 	hb {
-		background-color: #000000;
-		color: #000000;
+		background-color: ${COLORS.HOVER};
+		color: ${COLORS.HOVER_TEXT};
 	}
 	hb:hover {
-		background-color: rgba(200, 200, 200, 127);
+		background-color: ${COLORS.HOVERED};
+		color: ${COLORS.HOVERED_TEXT};
+	}
+	body {
+		color: ${COLORS.TEXT};
 	}</style>
 	`;
 
@@ -59,6 +65,7 @@
 					progress: false,
 					width: 600,
 				},
+				COLORS: COLORS,
 			}
 		},
 		methods: {
@@ -127,7 +134,6 @@
 </script>
 
 <style lang="scss">
-	$dis-text-color: #757575;
 	$readviar-length-box-height: 5rpx;
 	$readviar-status-box-height-off: 64rpx;
 	$readviar-status-box-height-on: 220rpx;
@@ -135,7 +141,6 @@
 	.fixed-button-icon {
 		width: 105rpx;
 		height: 105rpx;
-		filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(233deg) brightness(106%) contrast(101%);
 	}
 
 	.fixed-button {
@@ -147,7 +152,6 @@
 		left: calc(100% - 160rpx);
 		width: 110rpx;
 		height: 110rpx;
-		background-color: #77aaff;
 		box-shadow: 0 4rpx 6rpx rgba(0, 0, 0, 0.2);
 		z-index: 4;
 	}
@@ -199,7 +203,6 @@
 
 	.readviarviar-text {
 		font-size: 16rpx;
-		color: $dis-text-color;
 	}
 
 	.viar-tag-box {
@@ -238,7 +241,6 @@
 		width: 100%;
 		line-height: 44rpx;
 		font-size: 38rpx;
-		color: #000;
 		text-align: center;
 		white-space: nowrap;
 		overflow-x: auto;

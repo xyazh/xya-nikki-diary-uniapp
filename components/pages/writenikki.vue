@@ -1,18 +1,22 @@
 <template>
-	<view class="fixed-button" @tap="nikkiSave()">
-		<image src="@/static/icon/8z.png" class="fixed-button-icon" mode="widthFix"></image>
+	<view class="fixed-button" :style="{ backgroundColor: COLORS.MAIN}" @tap="nikkiSave()">
+		<image src="@/static/icon/8z.png" class="fixed-button-icon" :style="{filter: COLORS.IMGF2}" mode="widthFix">
+		</image>
 	</view>
-	<textarea class="diary-input" placeholder="写些什么罢" v-model="tn.text" :maxlength="-1" />
+	<textarea class="diary-input" :style="{ color: COLORS.TEXT}" placeholder="写些什么罢" v-model="tn.text"
+		:maxlength="-1" />
 	<view class="divider"></view>
 	<view class="datetime-row">
 		<!-- 日期 -->
 		<picker mode="date" value="{{`${tn.year}-${tn.month}-${tn.day}`}}" @change="onDateChange">
-			<view class="dt-btn">{{`${tn.year}-${tn.month}-${tn.day}`}}</view>
+			<view class="dt-btn" :style="{ backgroundColor: COLORS.BTN_BG3, color: COLORS.BTN_TEXT3}">
+				{{`${tn.year}-${tn.month}-${tn.day}`}}</view>
 		</picker>
 
 		<!-- 时间 -->
 		<picker mode="time" value="{{`${tn.hours}:${tn.minu}`}}" @change="onTimeChange">
-			<view class="dt-btn">{{`${tn.hours}:${tn.minu}`}}</view>
+			<view class="dt-btn" :style="{ backgroundColor: COLORS.BTN_BG3, color: COLORS.BTN_TEXT3}">
+				{{`${tn.hours}:${tn.minu}`}}</view>
 		</picker>
 	</view>
 </template>
@@ -20,6 +24,7 @@
 <script>
 	import Nikkis from '@/js/Nikkis.js'
 	import Utils from '@/js/Utils.js'
+	import COLORS from "@/js/Colors.js";
 	import {
 		ref,
 	} from 'vue';
@@ -33,6 +38,7 @@
 			return {
 				Utils,
 				tn,
+				COLORS: COLORS,
 			}
 		},
 		methods: {
@@ -119,12 +125,9 @@
 </script>
 
 <style lang="scss">
-	$dis-text-color: #757575;
-
 	.fixed-button-icon {
 		width: 105rpx;
 		height: 105rpx;
-		filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(233deg) brightness(106%) contrast(101%);
 	}
 
 	.fixed-button {
@@ -136,7 +139,6 @@
 		left: calc(100% - 160rpx);
 		width: 110rpx;
 		height: 110rpx;
-		background-color: #77aaff;
 		box-shadow: 0 4rpx 6rpx rgba(0, 0, 0, 0.2);
 		z-index: 4;
 	}
@@ -147,7 +149,6 @@
 		min-height: 40vh;
 		font-size: 30rpx;
 		line-height: 40rpx;
-		color: #000;
 		padding: 10rpx;
 		box-sizing: border-box;
 	}

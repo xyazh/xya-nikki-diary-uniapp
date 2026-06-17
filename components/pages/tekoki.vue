@@ -1,28 +1,33 @@
 <template>
 	<view class="tekoki-dl-mask" :class="{ 'tekoki-dl-mask-show': tekoki_dl_mask}" @click="closeDl()">
 	</view>
-	<view v-if="tekoki_dl1" class="tekoki-dl1">
-		<view class="tekoki-dl-bar">
-			<view class="tekoki-dl-bar-title">选择</view>
+	<view v-if="tekoki_dl1" class="tekoki-dl1" :style="{ backgroundColor: COLORS.BG}">
+		<view class="tekoki-dl-bar" :style="{ backgroundColor: COLORS.MAIN}">
+			<view class="tekoki-dl-bar-title" :style="{ backgroundColor: COLORS.MAIN, color: COLORS.MAIN_TITLE}">选择
+			</view>
 		</view>
 		<view class="tekoki-dl-bar-body">
-			<view v-for="(event,index) in TEKOKI_EVENTS" :key="index" class="events-item" @click="onEventsClick(event)">
+			<view v-for="(event,index) in TEKOKI_EVENTS" :key="index" class="events-item"
+				:style="{ color: COLORS.DIS_TEXT}" @click="onEventsClick(event)">
 				{{ event }}
 			</view>
 		</view>
 	</view>
-	<view v-if="tekoki_dl2" class="tekoki-dl1">
-		<view class="tekoki-dl-bar">
-			<view class="tekoki-dl-bar-title">记录</view>
+	<view v-if="tekoki_dl2" class="tekoki-dl1" :style="{ backgroundColor: COLORS.BG}">
+		<view class="tekoki-dl-bar" :style="{ backgroundColor: COLORS.MAIN}">
+			<view class="tekoki-dl-bar-title" :style="{ backgroundColor: COLORS.MAIN, color: COLORS.MAIN_TITLE}">记录
+			</view>
 		</view>
 		<view class="tekoki-dl-bar-body1">
-			<input type="number" v-model="text1" class="tekoki-dis-input" placeholder="次数" />
-			<input type="number" v-model="text2" class="tekoki-dis-input" placeholder="次数增量" />
-			<view class="tekoki-combo tekoki-dis-input">
+			<input type="number" v-model="text1" class="tekoki-dis-input" :style="{ color: COLORS.BG_TEXT1}"
+				placeholder="次数" />
+			<input type="number" v-model="text2" class="tekoki-dis-input" :style="{ color: COLORS.BG_TEXT1}"
+				placeholder="次数增量" />
+			<view class="tekoki-combo tekoki-dis-input" :style="{ color: COLORS.BG_TEXT1}">
 				<input class="tekoki-combo-input" v-model="text3" placeholder="请选择或输入事件" @focus="show = true"
 					@blur="onBlur" />
-				<text class="tekoki-combo-arrow">▼</text>
-				<view class="tekoki-panel" v-if="show">
+				<text class="tekoki-combo-arrow" :style="{ color: COLORS.DIS_TEXT}">▼</text>
+				<view class="tekoki-panel" :style="{ backgroundColor: COLORS.BG}" v-if="show">
 					<view v-for="item in TEKOKI_EVENTS" :key="item" class="tekoki-panel-item"
 						@mousedown.prevent="select(item)">
 						{{ item }}
@@ -31,65 +36,71 @@
 			</view>
 		</view>
 		<view class="tekoki-footer">
-			<view class="tekoki-add-btn" @click="onCancel">取消</view>
-			<view class="tekoki-add-btn" @click="onConfirm">确定</view>
+			<view class="tekoki-add-btn" :style="{ backgroundColor: COLORS.BTN_BG3, color: COLORS.BTN_TEXT3}"
+				@click="onCancel">取消</view>
+			<view class="tekoki-add-btn" :style="{ backgroundColor: COLORS.BTN_BG3, color: COLORS.BTN_TEXT3}"
+				@click="onConfirm">确定</view>
 		</view>
 	</view>
 	<view class="ym-bar">
 		<view class="ym-item">
-			<view class="arrow" @click="lastYear()">＜</view>
+			<view class="arrow" :style="{ color: COLORS.DIS_TEXT}" @click="lastYear()">＜</view>
 			<picker mode="date" fields="year" :value="on_year + '-01-01'" @change="onYearChange">
-				<view class="y-text">{{ on_year }}年</view>
+				<view class="y-text" :style="{ color: COLORS.DIS_TEXT}">{{ on_year }}年</view>
 			</picker>
-			<view class="arrow" @click="nextYear()">＞</view>
+			<view class="arrow" :style="{ color: COLORS.DIS_TEXT}" @click="nextYear()">＞</view>
 		</view>
 		<view class="ym-item">
-			<view class="arrow" @click="lastMonth()">＜</view>
+			<view class="arrow" :style="{ color: COLORS.DIS_TEXT}" @click="lastMonth()">＜</view>
 			<picker mode="date" fields="month" :value="on_year + '-' + on_month + '-01'" @change="onMonthChange">
-				<view class="m-text">{{ on_month }}月</view>
+				<view class="m-text" :style="{ color: COLORS.DIS_TEXT}">{{ on_month }}月</view>
 			</picker>
-			<view class="arrow" @click="nextMonth()">＞</view>
+			<view class="arrow" :style="{ color: COLORS.DIS_TEXT}" @click="nextMonth()">＞</view>
 		</view>
 	</view>
 
-	<view class="month-summary">
+	<view class="month-summary" :style="{ color: COLORS.DIS_TEXT}">
 		本月共{{TEKOKI_DATA.count_month_day}}天 {{TEKOKI_DATA.count_month_count}}次
 	</view>
 	<view class="calendar-box">
 		<view class="week-row">
-			<text v-for="w in ['日','一','二','三','四','五','六']" :key="w" class="week-item">
+			<text v-for="w in ['日','一','二','三','四','五','六']" :key="w" class="week-item"
+				:style="{ color: COLORS.DIS_TEXT}">
 				{{ w }}
 			</text>
 		</view>
 		<view class="calendar">
 			<view v-for="d in TEKOKI_TABLE" :key="d.id" class="calendar-day" @click="openDl2(d)">
-				<view class="calendar-day-bg" :style="{ '--rate': d.rate }" v-if="d.rate > 0"></view>
-				<text class="calendar-day-text">{{ d.day }}</text>
+				<view class="calendar-day-bg" :style="{ '--rate': d.rate, backgroundColor: COLORS.MAIN }"
+					v-show="d.rate > 0"></view>
+				<text class="calendar-day-text" :style="{ color: COLORS.DIS_TEXT}">{{ d.day }}</text>
 			</view>
 		</view>
 	</view>
 	<view class="btn-wrap">
-		<view class="tekoki-btn" @click="openDl1()">{{tekoking_event}}</view>
+		<view class="tekoki-btn" :style="{ backgroundColor: COLORS.BTN_BG3, color: COLORS.BTN_TEXT3}"
+			@click="openDl1()">{{tekoking_event}}</view>
 	</view>
 	<view class="stat">
-		<view class="stat-title">统计</view>
-		<view class="stat-sub">- 总计</view>
-		<text class="stat-line">总年数：{{TEKOKI_DATA.count_all_year}}</text>
-		<text class="stat-line">总月数：{{TEKOKI_DATA.count_all_month}}</text>
-		<text class="stat-line">总天数：{{TEKOKI_DATA.count_all_day}}</text>
-		<text class="stat-line">总次数：{{TEKOKI_DATA.count_all_count}}</text>
-		<text class="stat-line">总单日最高：{{TEKOKI_DATA.all_day_max}}</text>
-		<text class="stat-line">首日至今：{{TEKOKI_DATA.first_today}}</text>
-		<text class="stat-line">最近至今：{{TEKOKI_DATA.last_today}}</text>
-		<text class="stat-line">区间：{{TEKOKI_DATA.first_today-TEKOKI_DATA.last_today}}</text>
-		<view class="stat-sub">- 按年</view>
-		<text class="stat-line">年日数：{{TEKOKI_DATA.count_year_day}}</text>
-		<text class="stat-line">年次数：{{TEKOKI_DATA.count_year_count}}</text>
-		<text class="stat-line">年单日最高：{{TEKOKI_DATA.year_day_max}}</text>
-		<view class="stat-sub">- 按月</view>
-		<text class="stat-line">月日数：{{TEKOKI_DATA.count_month_day}}</text>
-		<text class="stat-line">月次数：{{TEKOKI_DATA.count_month_count}}</text>
-		<text class="stat-line">月单日最高：{{TEKOKI_DATA.month_day_max}}</text>
+		<view class="stat-title" :style="{ color: COLORS.SUB_TITLE}">统计</view>
+		<view class="stat-sub" :style="{ color: COLORS.SUB_ITEM}">- 总计</view>
+		<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">总年数：{{TEKOKI_DATA.count_all_year}}</text>
+		<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">总月数：{{TEKOKI_DATA.count_all_month}}</text>
+		<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">总天数：{{TEKOKI_DATA.count_all_day}}</text>
+		<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">总次数：{{TEKOKI_DATA.count_all_count}}</text>
+		<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">总单日最高：{{TEKOKI_DATA.all_day_max}}</text>
+		<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">首日至今：{{TEKOKI_DATA.first_today}}</text>
+		<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">最近至今：{{TEKOKI_DATA.last_today}}</text>
+		<text class="stat-line"
+			:style="{ color: COLORS.SUB_ITEM}">区间：{{TEKOKI_DATA.first_today-TEKOKI_DATA.last_today}}</text>
+		<view class="stat-sub" :style="{ color: COLORS.SUB_ITEM}">- 按年</view>
+		<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">年日数：{{TEKOKI_DATA.count_year_day}}</text>
+		<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">年次数：{{TEKOKI_DATA.count_year_count}}</text>
+		<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">年单日最高：{{TEKOKI_DATA.year_day_max}}</text>
+		<view class="stat-sub" :style="{ color: COLORS.SUB_ITEM}">- 按月</view>
+		<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">月日数：{{TEKOKI_DATA.count_month_day}}</text>
+		<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">月次数：{{TEKOKI_DATA.count_month_count}}</text>
+		<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">月单日最高：{{TEKOKI_DATA.month_day_max}}</text>
 	</view>
 </template>
 
@@ -97,7 +108,7 @@
 <script>
 	import Tekoki from '@/js/Tekoki.js'
 	import Utils from '@/js/Utils.js'
-
+	import COLORS from "@/js/Colors.js";
 	let now = new Date();
 
 	export default {
@@ -119,6 +130,7 @@
 				text2: '',
 				text3: '默认',
 				show: false,
+				COLORS: COLORS,
 			}
 		},
 		methods: {
@@ -235,7 +247,7 @@
 				Tekoki.add(
 						this.text3,
 						this.on_year,
-						this.on_month, 
+						this.on_month,
 						this.on_day,
 						Number(this.text1) + Number(this.text2))
 					.save()
@@ -261,7 +273,6 @@
 </script>
 
 <style lang="scss">
-	$dis-text-color: #757575;
 	$topbar-height: 110rpx;
 
 	.tekoki-dl-mask {
@@ -289,8 +300,6 @@
 		align-items: center;
 		width: 100%;
 		height: $topbar-height;
-		background-color: #77aaff;
-		color: #ffffff;
 	}
 
 	.tekoki-dl-bar-body {
@@ -319,7 +328,6 @@
 		top: 380rpx;
 		right: 80rpx;
 		bottom: 380rpx;
-		background-color: #fff;
 		align-items: center;
 		justify-content: center;
 		box-shadow: 0 4rpx 6rpx rgba(0, 0, 0, 0.2);
@@ -333,12 +341,11 @@
 		padding: 0 30rpx;
 		align-items: center;
 		font-size: 28rpx;
-		color: $dis-text-color;
 		border-bottom: 1rpx solid #ddd;
 	}
 
 	.tekoki-dis-input {
-		border-bottom: 1rpx solid #000;
+		border-bottom: 1rpx solid #333;
 		height: 36rpx;
 		line-height: 36rpx;
 		font-size: 30rpx;
@@ -368,7 +375,6 @@
 		top: 50%;
 		font-size: 24rpx;
 		transform: translateY(-50%);
-		color: #666;
 		pointer-events: none;
 	}
 
@@ -377,8 +383,7 @@
 		left: 0;
 		right: 0;
 		max-height: 25vh;
-		background: #fff;
-		border: 1px solid #ddd;
+		border: 1px solid #777;
 		z-index: 6;
 		overflow-y: auto;
 		overflow-x: hidden;
@@ -406,7 +411,6 @@
 		border-radius: 28rpx;
 		font-size: 26rpx;
 		margin: auto 5rpx;
-		color: #2da7ff;
 	}
 
 	/* 年月 */
@@ -427,7 +431,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		color: #666666;
 		font-size: 30rpx;
 		width: 75rpx;
 		font-weight: 500;
@@ -439,7 +442,6 @@
 		align-items: center;
 		justify-content: center;
 		width: 150rpx;
-		color: #666666;
 		font-weight: 500;
 		text-shadow: 0.5rpx 0 0 currentColor;
 
@@ -450,7 +452,6 @@
 		align-items: center;
 		justify-content: center;
 		width: 112rpx;
-		color: #666666;
 		font-weight: 500;
 		text-shadow: 0.5rpx 0 0 currentColor;
 	}
@@ -458,7 +459,6 @@
 	/* 本月统计 */
 	.month-summary {
 		text-align: center;
-		color: $dis-text-color;
 		margin: 20rpx 0;
 		font-size: 26rpx;
 	}
@@ -477,7 +477,6 @@
 	.week-item {
 		width: 14%;
 		text-align: center;
-		color: $dis-text-color;
 		font-size: 30rpx;
 	}
 
@@ -511,7 +510,6 @@
 	.calendar-day-text {
 		position: relative;
 		font-size: 30rpx;
-		color: $dis-text-color;
 	}
 
 
@@ -529,8 +527,6 @@
 		width: 160rpx;
 		height: 75rpx;
 		margin-left: 54rpx;
-		background: #2da7ff;
-		color: #fff;
 		text-align: center;
 		line-height: 75rpx;
 		border-radius: 2rpx;
@@ -544,7 +540,6 @@
 	}
 
 	.stat-title {
-		color: #77aaff;
 		font-size: 28rpx;
 		margin-bottom: 10rpx;
 		font-weight: bold;
@@ -552,7 +547,6 @@
 
 	.stat-sub {
 		font-weight: bold;
-		color: #666666;
 		margin: 5rpx 0;
 		font-size: 26rpx;
 	}
@@ -560,7 +554,6 @@
 	.stat-line {
 		display: block;
 		font-size: 26rpx;
-		color: #666666;
 		margin: 5rpx 0;
 	}
 </style>

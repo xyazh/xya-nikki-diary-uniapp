@@ -1,20 +1,20 @@
 <template>
-	<view class="viar-status-box" :class="{ 'viar-status-box-on': VIAR_ON }">
+	<view class="viar-status-box" :style="{ backgroundColor: COLORS.BG}" :class="{ 'viar-status-box-on': VIAR_ON }">
 		<view class="viar-srh-box" :class="{ 'viar-srh-line-on': VIAR_ON }">
 			<view class="stat">
-				<view class="stat-title">统计</view>
-				<view class="stat-sub">- 总计</view>
-				<text class="stat-line">故事数：{{RENDER_LIST.length}}</text>
+				<view class="stat-title" :style="{ color: COLORS.SUB_TITLE}">统计</view>
+				<view class="stat-sub" :style="{ color: COLORS.SUB_ITEM}">- 总计</view>
+				<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">故事数：{{RENDER_LIST.length}}</text>
 			</view>
 			<view class="line"></view>
-			<text class="viar-srh-title">搜索条件</text>
-			<view class="viar-srh-line" :class="{ 'viar-srh-line-on': VIAR_ON }">
+			<text class="viar-srh-title" :style="{ color: COLORS.DIS_TEXT}">搜索条件</text>
+			<view class="viar-srh-line" :style="{ color: COLORS.DIS_TEXT}" :class="{ 'viar-srh-line-on': VIAR_ON }">
 				<input v-model="SRH_TEXT" class="viar-srh-input" placeholder="搜索" />
 			</view>
-			<text class="viar-srh-title">Tags</text>
-			<view class="viar-srh-line" :class="{ 'viar-srh-line-on': VIAR_ON }">
+			<text class="viar-srh-title" :style="{ color: COLORS.DIS_TEXT}">Tags</text>
+			<view class="viar-srh-line" :style="{ color: COLORS.DIS_TEXT}" :class="{ 'viar-srh-line-on': VIAR_ON }">
 				<input v-model="srh_tag" class="viar-srh-input" placeholder="搜索" />
-				<text class="viar-status-btn" @tap="srhTag()">搜索</text>
+				<text class="viar-status-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="srhTag()">搜索</text>
 			</view>
 			<view class="viar-tag-box">
 				<view class="viar-tag" v-for="(tag_color,tag_name) in RENDER_TAGS" :key="tag_name"
@@ -30,21 +30,24 @@
 			</view>
 		</view>
 		<view class="viar-status-btn-line">
-			<text v-if="VIAR_ON" class="viar-status-btn" @tap="unrsh()">重置</text>
-			<text v-if="VIAR_ON" class="viar-status-btn" @tap="srh()">搜索</text>
-			<text @click="openStatus()" class="viar-status-btn">{{VIAR_ON ? "收起" : "展开"}}</text>
+			<text v-if="VIAR_ON" class="viar-status-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="unrsh()">重置</text>
+			<text v-if="VIAR_ON" class="viar-status-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="srh()">搜索</text>
+			<text @click="openStatus()" class="viar-status-btn"
+				:style="{ color: COLORS.BTN_TEXT2}">{{VIAR_ON ? "收起" : "展开"}}</text>
 		</view>
 	</view>
-	<view v-if="!SRHING_MODE" class="fixed-button" @tap="openWriter()">
-		<image src="@/static/icon/ck.png" class="fixed-button-icon" mode="widthFix"></image>
+	<view v-if="!SRHING_MODE" class="fixed-button" :style="{ backgroundColor: COLORS.MAIN}" @tap="openWriter()">
+		<image src="@/static/icon/ck.png" class="fixed-button-icon" :style="{filter: COLORS.IMGF2}" mode="widthFix">
+		</image>
 	</view>
 	<view class="viar-card-box" :class="{ 'vcb-offset': VIAR_ON }">
-		<view class="viar-card" v-for="(item,index) in RENDER_LIST" :key="item.id" @tap="openItem(item.id)">
-			<view class="viar-text">{{item.time}}</view>
-			<view class="viar-title">{{item.title}}</view>
-			<view class="viar-text">{{item.meta}}</view>
+		<view class="viar-card" :style="{ backgroundColor: COLORS.BG_CARD}" v-for="(item,index) in RENDER_LIST"
+			:key="item.id" @tap="openItem(item.id)">
+			<view class="viar-text" :style="{ color: COLORS.DIS_TEXT}">{{item.time}}</view>
+			<view class="viar-title" :style="{ color: COLORS.TEXT}">{{item.title}}</view>
+			<view class="viar-text" :style="{ color: COLORS.DIS_TEXT}">{{item.meta}}</view>
 			<view class="line"></view>
-			<view class="viar-text">Tags</view>
+			<view class="viar-text" :style="{ color: COLORS.DIS_TEXT}">Tags</view>
 			<view class="viar-tag-box">
 				<view class="viar-tag" v-for="(tag_color,tag_name) in item.tags" :key="tag_name"
 					:style="{ backgroundColor: tag_color }">
@@ -58,6 +61,7 @@
 <script>
 	import Utils from '@/js/Utils.js'
 	import VIAR_TREE from '@/js/ViArTree.js'
+	import COLORS from "@/js/Colors.js";
 	import {
 		ref,
 		reactive,
@@ -84,6 +88,7 @@
 				VIAR_ON: VIAR_ON,
 				SRH_TEXT: SRH_TEXT,
 				srh_tag: "",
+				COLORS: COLORS,
 			}
 		},
 		methods: {
@@ -136,7 +141,6 @@
 
 
 <style lang="scss">
-	$dis-text-color: #757575;
 	$viar-length-box-height: 5rpx;
 	$viar-status-box-height-off: 64rpx;
 	$viar-status-box-height-on: 540rpx;
@@ -185,7 +189,6 @@
 		left: calc(100% - 160rpx);
 		width: 110rpx;
 		height: 110rpx;
-		background-color: #77aaff;
 		box-shadow: 0 4rpx 6rpx rgba(0, 0, 0, 0.2);
 		z-index: 1;
 	}
@@ -193,7 +196,6 @@
 	.fixed-button-icon {
 		width: 105rpx;
 		height: 105rpx;
-		filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(233deg) brightness(106%) contrast(101%);
 	}
 
 	.viar-status-box {
@@ -201,7 +203,6 @@
 		width: 100%;
 		display: block;
 		height: $viar-status-box-height-off;
-		background-color: #fff;
 		border-bottom: 1rpx solid #ddd;
 		transition: height 0.3s ease;
 	}
@@ -223,7 +224,6 @@
 		margin: 0 20rpx;
 		height: $viar-status-box-height-off;
 		line-height: $viar-status-box-height-off;
-		color: #2da7ff;
 		display: flex;
 		justify-content: right;
 		align-items: center;
@@ -247,7 +247,6 @@
 	.viar-srh-title {
 		display: block;
 		font-size: 20rpx;
-		color: #666666;
 		margin: 10rpx 20rpx 0 20rpx;
 	}
 
@@ -267,31 +266,12 @@
 		margin: 0 20rpx;
 	}
 
-	.viar-length-box {
-		position: fixed;
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		margin-top: $viar-status-box-height-off;
-		height: $viar-length-box-height;
-		background-color: #fff;
-		border-top: 1rpx solid #ddd;
-		transition: margin-top 0.3s ease;
-	}
-
-	.viar-length {
-		color: $dis-text-color;
-		font-size: 26rpx;
-	}
-
 	.viar-card-box {
 		margin-top: calc(5rpx + $viar-length-box-height + $viar-status-box-height-off);
 		transition: margin-top 0.3s ease;
 	}
 
 	.viar-card {
-		background-color: #fff;
 		margin-bottom: 10rpx;
 		margin-left: 10rpx;
 		margin-right: 10rpx;
@@ -302,7 +282,6 @@
 
 	.viar-text {
 		font-size: 24rpx;
-		color: $dis-text-color;
 	}
 
 	.viar-title {
@@ -322,7 +301,6 @@
 	}
 
 	.stat-title {
-		color: #77aaff;
 		font-size: 28rpx;
 		margin-bottom: 10rpx;
 		font-weight: bold;
@@ -330,7 +308,6 @@
 
 	.stat-sub {
 		font-weight: bold;
-		color: #666666;
 		margin: 5rpx 0;
 		font-size: 26rpx;
 	}
@@ -338,7 +315,6 @@
 	.stat-line {
 		display: block;
 		font-size: 26rpx;
-		color: #666666;
 		margin: 5rpx 0;
 	}
 </style>

@@ -1,13 +1,20 @@
 <template>
 	<view class="page-home">
-		<text class="home-text">
+		<text class="home-text" :style="{ color: COLORS.DIS_TEXT}">
 			这是主页
 		</text>
 	</view>
 </template>
 
 <script>
+	import COLORS from "@/js/Colors.js";
+	
 	export default {
+		data() {
+			return {
+				COLORS: COLORS
+			}
+		},
 		emits: ['page-mounted'],
 		name: "Home"
 	}

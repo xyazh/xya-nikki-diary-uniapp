@@ -1,36 +1,40 @@
 <template>
-	<!-- 密码输入遮罩 -->
-	<view v-if="showMask" class="inpw-mask">
-		<view class="inpw-inline">
-			<text class="inpw-text">密码：</text>
-			<input password v-model="password" placeholder="请输入密码" />
-		</view>
-		<button class="inpw-ok-btn" type="primary" @click="inptConfirm()">确认</button>
-	</view>
-	<view class="app-status-bar"></view>
-	<view class="app-bar">
-		<view class="left" @click="toggleSidebar">
-			<image class="menu-btn" src="/static/icon/Dc.png"></image>
-		</view>
-		<view class="title">{{title}}</view>
-	</view>
-	<view class="container">
-		<!-- 页面内容 -->
-		<view class="page-content">
-			<component :is="currentPage" @page-mounted="onPageMounted"></component>
-		</view>
-
-		<view class="overlay" :class="{ 'overlay-show': sidebarVisible }" @click="closeSidebar">
-		</view>
-		<view class="sidebar" :class="{ 'sidebar-open': sidebarVisible }">
-			<view class="sidebar-block">
+	<view v-if="base_on_page">
+		<!-- 密码输入遮罩 -->
+		<view v-if="showMask" class="inpw-mask" :style="{ backgroundColor: COLORS.BG}">
+			<view class="inpw-inline" :style="{ color: COLORS.BG_TEXT1}">
+				<text class="inpw-text">密码：</text>
+				<input password v-model="password" placeholder="请输入密码" />
 			</view>
-			<scroll-view scroll-y="true" class="sidebar-scroll-view" show-scrollbar="false">
-				<view class="sidebar-list-item" v-for="item in sidebaItems" :key="item.key" @click="switchPage(item)">
-					<image :src="item.icon" class="sidebar-item-icon" mode="widthFix"></image>
-					<text class="sidebar-item-text">{{item.title}}</text>
+			<button class="inpw-ok-btn" :style="{ backgroundColor: COLORS.BTN_BG1, color: COLORS.BTN_TEXT1}"
+				type="primary" @click="inptConfirm()">确认</button>
+		</view>
+		<view class="app-status-bar" :style="{ backgroundColor: COLORS.MAIN}"></view>
+		<view class="app-bar" :style="{ backgroundColor: COLORS.MAIN, color: COLORS.MAIN_TITLE}">
+			<view class="left" @click="toggleSidebar">
+				<image class="menu-btn" src="/static/icon/Dc.png"></image>
+			</view>
+			<view class="title">{{title}}</view>
+		</view>
+		<view class="container" :style="{ backgroundColor: COLORS.BG}">
+			<!-- 页面内容 -->
+			<view class="page-content">
+				<component :is="currentPage" @page-mounted="onPageMounted"></component>
+			</view>
+
+			<view class="overlay" :class="{ 'overlay-show': sidebarVisible }" @click="closeSidebar">
+			</view>
+			<view class="sidebar"  :class="{ 'sidebar-open': sidebarVisible }" :style="{ backgroundColor: COLORS.BG}">
+				<view class="sidebar-block" :style="{ backgroundColor: COLORS.MAIN}">
 				</view>
-			</scroll-view>
+				<scroll-view scroll-y="true" class="sidebar-scroll-view" show-scrollbar="false">
+					<view class="sidebar-list-item" v-for="item in sidebaItems" :key="item.key"
+						@click="switchPage(item)">
+						<image :src="item.icon" class="sidebar-item-icon" :style="{filter: COLORS.IMGF}" mode="widthFix"></image>
+						<text class="sidebar-item-text" :style="{ color: COLORS.BG_TEXT1}">{{item.title}}</text>
+					</view>
+				</scroll-view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -40,6 +44,9 @@
 		ref,
 		markRaw,
 	} from "vue"
+	import {
+		getCurrentInstance
+	} from 'vue'
 	import home from '@/components/pages/home.vue'
 	import nikki from '@/components/pages/nikki.vue'
 	import readnikki from '@/components/pages/readnikki.vue'
@@ -56,12 +63,16 @@
 	import Utils from '@/js/Utils.js';
 	import DataManager from '@/js/DataManager';
 
+	import COLORS from "@/js/Colors.js";
+
 	if (process.env.UNI_PLATFORM === 'h5') {
 		location.hash = `#home`;
 	}
 	export default {
 		data() {
 			return {
+				COLORS: COLORS,
+				base_on_page: true,
 				showMask: DataManager.hasPassword(),
 				sidebarVisible: false,
 				password: "",
@@ -203,6 +214,7 @@
 				}
 			},
 			outOrWait() {
+				this.destroyVueApp();
 				const sys = uni.getSystemInfoSync();
 				if (
 					(sys.platform === 'android' || sys.platform === 'ios') &&
@@ -211,8 +223,29 @@
 				) {
 					plus.runtime.quit();
 				} else {
+					this.handleExit();
+				}
+			},
+			isElectron() {
+				return navigator.userAgent.toLowerCase().includes('electron')
+			},
+			handleExit() {
+				if (this.isElectron()) {
+					try {
+						const {
+							ipcRenderer
+						} = require('electron')
+						ipcRenderer.send('app-quit')
+					} catch (e) {
+						console.error('Electron exit failed', e)
+					}
+				} else {
 					while (true) {}
 				}
+			},
+			destroyVueApp() {
+				this.base_on_page = false;
+				document.body.style.pointerEvents = 'none';
 			},
 			switchPage(item) {
 				this.closeSidebar();
@@ -261,7 +294,7 @@
 
 			onHashchange() {
 				let hash = location.hash.replace('#', '');
-				if(!hash){
+				if (!hash) {
 					this.currentPage = "home";
 					location.hash = `#${this.currentPage}`;
 					return;
@@ -330,7 +363,6 @@
 		top: 0;
 		right: 0;
 		bottom: 0;
-		background-color: #ffffff;
 		align-items: center;
 		justify-content: center;
 		z-index: 4;
@@ -345,7 +377,6 @@
 
 	.inpw-text {
 		font-size: 32rpx;
-		color: #000;
 		width: 100rpx;
 	}
 
@@ -363,8 +394,6 @@
 		margin: 25rpx auto;
 		width: 160rpx;
 		height: 70rpx;
-		background-color: #e5e5e5;
-		color: #000;
 		font-size: 28rpx;
 		border-radius: 3rpx;
 		box-shadow: 1rpx 0 8rpx rgba(0, 0, 0, 0.2);
@@ -389,7 +418,6 @@
 		right: 0;
 		height: $status-bar-height;
 		z-index: 1;
-		background-color: #77aaff;
 	}
 
 	.app-bar {
@@ -402,8 +430,6 @@
 		padding: 0 16rpx;
 		height: $topbar-height;
 		z-index: 1;
-		background-color: #77aaff;
-		color: #ffffff;
 	}
 
 	.left {
@@ -450,9 +476,8 @@
 		left: -488rpx;
 		width: 480rpx;
 		height: 100%;
-		background-color: #fff;
 		z-index: 3;
-		box-shadow: 2rpx 0 8rpx rgba(0, 0, 0, 0.2);
+		box-shadow: 2rpx 0 8rpx rgba(0, 0, 0, 0.4);
 		padding: 0rpx;
 		transition: left 0.3s ease;
 	}
@@ -464,7 +489,6 @@
 	.sidebar-block {
 		width: 100%;
 		height: 360rpx;
-		background-color: #77aaff;
 	}
 
 	.sidebar-scroll-view {
@@ -484,12 +508,10 @@
 		height: 36rpx;
 		margin-right: 16rpx;
 		display: block;
-		filter: invert(64%) sepia(56%) saturate(3224%) hue-rotate(195deg) brightness(107%) contrast(101%);
 	}
 
 	.sidebar-item-text {
 		font-size: 30rpx;
-		color: #000000;
 		line-height: 50rpx;
 	}
 </style>
