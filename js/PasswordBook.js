@@ -59,7 +59,7 @@ class PasswordBook {
 		DM.load();
 		var li = DM.get("password_list", []);
 		PASSWORD_LIST.push(...li);
-		this.renderIdentity().save();
+		this.renderIdentity();
 	}
 
 	importFile(data) {

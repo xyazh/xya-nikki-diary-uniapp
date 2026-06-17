@@ -1,40 +1,40 @@
 <template>
-	<input class="viar-title-input" v-model="TEMP_VIAR.title" placeholder="标题" />
+	<input class="viar-title-input" :style="{ color: COLORS.TEXT}" v-model="TEMP_VIAR.title" placeholder="标题" />
 	<view class="viar-body-input">
 		<!-- 工具栏 -->
 		<view v-show="input_mode">
-			<view class="editor-toolbar">
-				<view class="editor-toolbar__item" @click="setBold">
+			<view class="editor-toolbar" :style="{ backgroundColor: COLORS.TOOLBAR}">
+				<view class="editor-toolbar__item" :style="{ color: COLORS.TOOLBAR_TEXT}" @click="setBold">
 					<text class="editor-toolbar__text bold">B</text>
 				</view>
 
-				<view class="editor-toolbar__item" @click="setItalic">
+				<view class="editor-toolbar__item" :style="{ color: COLORS.TOOLBAR_TEXT}" @click="setItalic">
 					<text class="editor-toolbar__text italic">I</text>
 				</view>
 
-				<view class="editor-toolbar__item" @click="setStrike">
+				<view class="editor-toolbar__item" :style="{ color: COLORS.TOOLBAR_TEXT}" @click="setStrike">
 					<text class="editor-toolbar__text delete">划去</text>
 				</view>
 
-				<view class="editor-toolbar__item" @click="setSpoiler">
+				<view class="editor-toolbar__item" :style="{ color: COLORS.TOOLBAR_TEXT}" @click="setSpoiler">
 					<text class="editor-toolbar__text">防剧透</text>
 				</view>
 			</view>
-			<editor id="editor" class="viar-editor" :class="{ 'viar-editor-full': full }" placeholder="写些什么罢"
-				@ready="onEditorReady" @input="onEditorInput"></editor>
+			<editor id="editor" class="viar-editor" :class="{ 'viar-editor-full': full }" :style="{ color: COLORS.TEXT}"
+				placeholder="写些什么罢" @ready="onEditorReady" @input="onEditorInput"></editor>
 		</view>
-		<textarea v-show="!input_mode" v-model="TEMP_VIAR.text" class="viar-editor"
+		<textarea v-show="!input_mode" v-model="TEMP_VIAR.text" class="viar-editor" :style="{ color: COLORS.TEXT}"
 			:class="{ 'viar-editor-full': full }" placeholder="写些什么罢" :maxlength="-1"></textarea>
 		<view class="viar-divider"></view>
 	</view>
 	<view class="writeviar-btn-line">
-		<text class="writeviar-title-btn" @tap="smode()">切换</text>
-		<text class="writeviar-title-btn" @tap="sfull()">全屏</text>
+		<text class="writeviar-title-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="smode()">切换</text>
+		<text class="writeviar-title-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="sfull()">全屏</text>
 	</view>
 	<text class="viar-srh-title">Tags</text>
 	<view class="viar-srh-line">
 		<input v-model="srh_tag" class="viar-srh-input" placeholder="搜索或创建" />
-		<text class="writeviar-title-btn" @tap="srhTag()">搜索</text>
+		<text class="writeviar-title-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="srhTag()">搜索</text>
 	</view>
 	<view class="viar-tag-box">
 		<view class="viar-tag" v-for="(tag_color,tag_name) in RENDER_TAGS" :key="tag_name"
@@ -49,23 +49,26 @@
 		</view>
 	</view>
 	<view class="viar-divider"></view>
-	<view class="writeviar-node">{{TEMP_VIAR.parent.format()}}</view>
-	<text class="writeviar-btn" @tap="selectParent()">父节点</text>
+	<view class="writeviar-node" :style="{ color: COLORS.DIS_TEXT}">{{TEMP_VIAR.parent.format()}}</view>
+	<text class="writeviar-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="selectParent()">父节点</text>
 	<view class="viar-divider"></view>
-	<view v-for="(node,index) in TEMP_VIAR.links" :key="node.id" class="writeviar-node" @tap="unSelectLink(node,index)">
+	<view v-for="(node,index) in TEMP_VIAR.links" :key="node.id" class="writeviar-node"
+		:style="{ color: COLORS.DIS_TEXT}" @tap="unSelectLink(node,index)">
 		{{node.format()}}
 	</view>
-	<text class="writeviar-btn" @tap="selectLink()">链接</text>
+	<text class="writeviar-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="selectLink()">链接</text>
 	<view class="viar-divider"></view>
 	<input class="viar-meta-input" v-model="TEMP_VIAR.meta" placeholder="编辑meta" />
-	<view class="fixed-button" @tap="viarSave()">
-		<image src="@/static/icon/8z.png" class="fixed-button-icon" mode="widthFix"></image>
+	<view class="fixed-button" :style="{ backgroundColor: COLORS.MAIN}" @tap="viarSave()">
+		<image src="@/static/icon/8z.png" class="fixed-button-icon" :style="{filter: COLORS.IMGF2}" mode="widthFix">
+		</image>
 	</view>
 </template>
 
 <script>
 	import Utils from '@/js/Utils.js'
 	import VIAR_TREE from '@/js/ViArTree.js'
+	import COLORS from "@/js/Colors.js";
 	import {
 		ref,
 		reactive,
@@ -90,6 +93,7 @@
 				RENDER_LIST,
 				RENDER_TAGS,
 				TEMP_VIAR,
+				COLORS: COLORS,
 			}
 		},
 		methods: {
@@ -292,7 +296,6 @@
 	.fixed-button-icon {
 		width: 105rpx;
 		height: 105rpx;
-		filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(233deg) brightness(106%) contrast(101%);
 	}
 
 	.fixed-button {
@@ -304,7 +307,6 @@
 		left: calc(100% - 160rpx);
 		width: 110rpx;
 		height: 110rpx;
-		background-color: #77aaff;
 		box-shadow: 0 4rpx 6rpx rgba(0, 0, 0, 0.2);
 		z-index: 4;
 	}
@@ -333,7 +335,6 @@
 		margin: 0 20rpx;
 		height: 64rpx;
 		line-height: 64rpx;
-		color: #2da7ff;
 		display: flex;
 		justify-content: right;
 		align-items: center;
@@ -344,14 +345,14 @@
 		margin: 0 10rpx;
 		height: 64rpx;
 		line-height: 64rpx;
-		color: #2da7ff;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 	}
 
 	.viar-body-input {
-		padding: 10rpx;
+		width: 100vw;
+		max-width: 100vw;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -363,7 +364,7 @@
 		font-size: 30rpx;
 		line-height: 40rpx;
 		color: #000;
-		width: 100%;
+		width: 100vw;
 	}
 
 	.viar-editor-full {

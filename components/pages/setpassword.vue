@@ -1,30 +1,31 @@
 <template>
 	<view class="page-home">
 		<view v-if="has_password" class="stpw-inline">
-			<text class="stpw-text">旧密码:</text>
-			<view class="stpw-input-warp" :class="{ 'stpw-input-error': err0 }">
+			<text class="stpw-text" :style="{ color: COLORS.BG_TEXT1}">旧密码:</text>
+			<view class="stpw-input-warp" :style="{ color: COLORS.BG_TEXT1}" :class="{ 'stpw-input-error': err0 }">
 				<input password v-model="password0" class="stpw-input" placeholder="请输入密码" @input="err0 = ''" />
 				<view class="stpw-error-icon-off" :class="{ 'stpw-error-icon-on': err0 }">!</view>
 			</view>
 		</view>
 		<view class="stpw-error-text-off" :class="{ 'stpw-error-text-on': err0 }">{{err0}}</view>
 		<view class="stpw-inline">
-			<text class="stpw-text">密码:</text>
-			<view class="stpw-input-warp" :class="{ 'stpw-input-error': err1 }">
+			<text class="stpw-text" :style="{ color: COLORS.BG_TEXT1}">密码:</text>
+			<view class="stpw-input-warp" :style="{ color: COLORS.BG_TEXT1}" :class="{ 'stpw-input-error': err1 }">
 				<input password v-model="password1" class="stpw-input" placeholder="请输入密码(留空删除密码)" @input="err1 = ''" />
 				<view class="stpw-error-icon-off" :class="{ 'stpw-error-icon-on': err1 }">!</view>
 			</view>
 		</view>
 		<view class="stpw-error-text-off" :class="{ 'stpw-error-text-on': err1 }">{{err1}}</view>
 		<view class="stpw-inline">
-			<text class="stpw-text">确认密码:</text>
-			<view class="stpw-input-warp" :class="{ 'stpw-input-error': err2 }">
+			<text class="stpw-text" :style="{ color: COLORS.BG_TEXT1}">确认密码:</text>
+			<view class="stpw-input-warp" :style="{ color: COLORS.BG_TEXT1}" :class="{ 'stpw-input-error': err2 }">
 				<input password v-model="password2" class="stpw-input" placeholder="请输入密码(留空删除密码)" @input="err2 = ''" />
 				<view class="stpw-error-icon-off" :class="{ 'stpw-error-icon-on': err2 }">!</view>
 			</view>
 		</view>
 		<view class="stpw-error-text-off" :class="{ 'stpw-error-text-on': err2 }">{{err2}}</view>
-		<button class="stpw-ok-btn" type="primary" @click="setPassword()">确认</button>
+		<button class="stpw-ok-btn" :style="{ backgroundColor: COLORS.BTN_BG1, color: COLORS.BTN_TEXT1}" type="primary"
+			@click="setPassword()">确认</button>
 	</view>
 </template>
 
@@ -32,7 +33,7 @@
 <script>
 	import Utils from '@/js/Utils.js';
 	import DataManager from '@/js/DataManager';
-
+	import COLORS from "@/js/Colors.js";
 	export default {
 		emits: ['page-mounted'],
 		data() {
@@ -44,6 +45,7 @@
 				err0: "",
 				err1: "",
 				err2: "",
+				COLORS: COLORS,
 			}
 		},
 		methods: {
@@ -87,8 +89,6 @@
 </script>
 
 <style lang="scss">
-	$dis-text-color: #757575;
-
 	.stpw-error-icon-off {
 		width: 0;
 		height: 36rpx;
@@ -147,7 +147,6 @@
 
 	.stpw-text {
 		font-size: 32rpx;
-		color: #000;
 		text-align: justify;
 		text-align-last: justify;
 		margin-right: 10rpx;
@@ -179,8 +178,6 @@
 		margin: 25rpx auto;
 		width: 160rpx;
 		height: 70rpx;
-		background-color: #e5e5e5;
-		color: #000;
 		font-size: 28rpx;
 		border-radius: 3rpx;
 		box-shadow: 1rpx 0 8rpx rgba(0, 0, 0, 0.2);

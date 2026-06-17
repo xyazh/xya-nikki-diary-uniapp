@@ -36,10 +36,8 @@
 			</view>
 		</view>
 		<view class="tekoki-footer">
-			<view class="tekoki-add-btn" :style="{ backgroundColor: COLORS.BTN_BG3, color: COLORS.BTN_TEXT3}"
-				@click="onCancel">取消</view>
-			<view class="tekoki-add-btn" :style="{ backgroundColor: COLORS.BTN_BG3, color: COLORS.BTN_TEXT3}"
-				@click="onConfirm">确定</view>
+			<view class="tekoki-add-btn" :style="{ color: COLORS.BTN_TEXT2}" @click="onCancel">取消</view>
+			<view class="tekoki-add-btn" :style="{ color: COLORS.BTN_TEXT2}" @click="onConfirm">确定</view>
 		</view>
 	</view>
 	<view class="ym-bar">

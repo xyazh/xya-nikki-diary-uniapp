@@ -14,10 +14,11 @@
 			<view class="readviarviar-title-text" :style="{ color: COLORS.TEXT}">{{node.title}}</view>
 		</view>
 		<view class="readviar-btn-line">
-			<text class="readviar-title-btn" @tap="openLink()">链接</text>
-			<text class="readviar-title-btn" @tap="openHigh()">上级</text>
-			<text class="readviar-title-btn" @tap="openLow()">下级</text>
-			<text @click="openTitle()" class="readviar-title-btn">{{title_box_on ? "收起" : "展开"}}</text>
+			<text class="readviar-title-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="openLink()">链接</text>
+			<text class="readviar-title-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="openHigh()">上级</text>
+			<text class="readviar-title-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="openLow()">下级</text>
+			<text @click="openTitle()" class="readviar-title-btn"
+				:style="{ color: COLORS.BTN_TEXT2}">{{title_box_on ? "收起" : "展开"}}</text>
 		</view>
 	</view>
 	<view class="readviar-box" :class="{ 'rvcb-offset': title_box_on }" v-html="STYLE_CONTENT+node.content">
@@ -161,7 +162,6 @@
 		width: 100%;
 		display: block;
 		height: $readviar-status-box-height-off;
-		background-color: #fff;
 		border-bottom: 1rpx solid #ddd;
 		transition: height 0.3s ease;
 	}
@@ -195,7 +195,6 @@
 		margin: 0 20rpx;
 		height: $readviar-status-box-height-off;
 		line-height: $readviar-status-box-height-off;
-		color: #2da7ff;
 		display: flex;
 		justify-content: right;
 		align-items: center;

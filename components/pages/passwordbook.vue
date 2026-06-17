@@ -1,12 +1,12 @@
 <template>
 	<view class="pwb-dl-mask" :class="{ 'pwb-dl-mask-show': pwb_dl_mask}" @click="closeDl()"></view>
-	<view v-if="pwb_dl_mask" class="pwb-dl">
-		<view class="pwb-dl-bar">
+	<view v-if="pwb_dl_mask" class="pwb-dl" :style="{ backgroundColor: COLORS.BG}">
+		<view class="pwb-dl-bar" :style="{ backgroundColor: COLORS.MAIN, color: COLORS.MAIN_TITLE}">
 			<view class="pwb-dl-bar-title">记录密码</view>
 		</view>
 		<view class="pwb-dl-bar-body">
 			<view class="pwb-dialog">
-				<view class="pwb-dialog-body">
+				<view class="pwb-dialog-body" :style="{ color: COLORS.BG_TEXT1}">
 					<view class="pwb-field">
 						<text class="pwb-label">Web/App</text>
 						<text v-if="copy_mode" class="pwb-input"
@@ -60,59 +60,64 @@
 			</view>
 		</view>
 		<view class="pwb-footer">
-			<view class="pwb-add-btn pwb-btn-delete" @click="onDelete" v-if="!copy_mode">删除</view>
-			<view class="pwb-add-btn" @click="onCancel">取消</view>
-			<view class="pwb-add-btn" @click="onConfirm" v-if="!copy_mode">确定</view>
-			<view class="pwb-add-btn" @click="onUpdate">{{copy_mode?"修改":"复制"}}</view>
+			<view class="pwb-add-btn pwb-btn-delete" :style="{ color: COLORS.BTN_TEXT4}" @click="onDelete"
+				v-if="!copy_mode">删除</view>
+			<view class="pwb-add-btn" :style="{ color: COLORS.BTN_TEXT2}" @click="onCancel">取消</view>
+			<view class="pwb-add-btn" :style="{ color: COLORS.BTN_TEXT2}" @click="onConfirm" v-if="!copy_mode">确定</view>
+			<view class="pwb-add-btn" :style="{ color: COLORS.BTN_TEXT2}" @click="onUpdate">{{copy_mode?"修改":"复制"}}
+			</view>
 		</view>
 	</view>
 
-	<view class="pwb-box" :class="{ 'pwb-box-on': pwb_box_on }">
+	<view class="pwb-box" :style="{ backgroundColor: COLORS.BG}" :class="{ 'pwb-box-on': pwb_box_on }">
 		<view class="pwb-srh-box" :class="{ 'pwb-srh-line-on': pwb_box_on }">
-			<view class="pwb-srh-line" :class="{ 'pwb-srh-line-on': pwb_box_on }">
+			<view class="pwb-srh-line" :style="{ color: COLORS.BG_TEXT1}" :class="{ 'pwb-srh-line-on': pwb_box_on }">
 				<input v-model="srh_text" class="pwb-srh-input" placeholder="搜索" />
 			</view>
 		</view>
 		<view class="pwb-btn-line">
-			<text v-if="pwb_box_on" class="pwb-btn" @tap="srh()">搜索</text>
-			<text v-if="pwb_box_on" class="pwb-btn" @tap="unrsh()">重置</text>
-			<text @click="openBox()" class="pwb-btn">{{pwb_box_on ? "收起" : "展开"}}</text>
+			<text v-if="pwb_box_on" class="pwb-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="srh()">搜索</text>
+			<text v-if="pwb_box_on" class="pwb-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="unrsh()">重置</text>
+			<text @click="openBox()" class="pwb-btn"
+				:style="{ color: COLORS.BTN_TEXT2}">{{pwb_box_on ? "收起" : "展开"}}</text>
 		</view>
 	</view>
-	<view class="fixed-button" @tap="addPassword()">
-		<image src="@/static/icon/ck.png" class="fixed-button-icon" mode="widthFix"></image>
+	<view class="fixed-button" :style="{ backgroundColor: COLORS.MAIN}" @tap="addPassword()">
+		<image src="@/static/icon/ck.png" class="fixed-button-icon" :style="{filter: COLORS.IMGF2}" mode="widthFix">
+		</image>
 	</view>
 	<view class="pwb-length-box" :class="{ 'pwb-length-box-offset': pwb_box_on }">
-		<text class="pwb-length">共{{RENDER_LIST.length}}篇</text>
+		<text class="pwb-length" :style="{ color: COLORS.DIS_TEXT}">共{{RENDER_LIST.length}}篇</text>
 	</view>
 	<view class="pwb-list" :class="{ 'pwb-list-on': pwb_box_on }">
-		<view class="pwb-item" v-for="item in RENDER_LIST" :key="item.id" @tap="openItem(item)">
+		<view class="pwb-item" :style="{ backgroundColor: COLORS.BG_CARD}" v-for="item in RENDER_LIST" :key="item.id"
+			@tap="openItem(item)">
 			<view class="pwb-row pwb-row-main">
-				<text class="pwb-site">{{item.site?item.site:"无"}}</text>
-				<text class="pwb-app">Web/App</text>
+				<text class="pwb-site" :style="{ color: COLORS.TEXT}">{{item.site?item.site:"无"}}</text>
+				<text class="pwb-app" :style="{ color: COLORS.DIS_TEXT}">Web/App</text>
 			</view>
 			<view v-if="item.username" class="pwb-row">
-				<text class="pwb-label">用户名</text>
-				<text class="pwb-value">{{item.username}}</text>
+				<text class="pwb-label" :style="{ color: COLORS.DIS_TEXT}">用户名</text>
+				<text class="pwb-value" :style="{ color: COLORS.TEXT}">{{item.username}}</text>
 			</view>
 			<view v-if="item.password" class="pwb-row">
-				<text class="pwb-label">密码</text>
-				<text class="pwb-value">{{item.password}}</text>
+				<text class="pwb-label" :style="{ color: COLORS.DIS_TEXT}">密码</text>
+				<text class="pwb-value" :style="{ color: COLORS.TEXT}">{{item.password}}</text>
 			</view>
 			<view v-if="item.email" class="pwb-row">
-				<text class="pwb-label">邮箱</text>
-				<text class="pwb-value">{{item.email}}</text>
+				<text class="pwb-label" :style="{ color: COLORS.DIS_TEXT}">邮箱</text>
+				<text class="pwb-value" :style="{ color: COLORS.TEXT}">{{item.email}}</text>
 			</view>
 			<view v-if="item.phone" class="pwb-row">
-				<text class="pwb-label">电话</text>
-				<text class="pwb-value">{{item.phone}}</text>
+				<text class="pwb-label" :style="{ color: COLORS.DIS_TEXT}">电话</text>
+				<text class="pwb-value" :style="{ color: COLORS.TEXT}">{{item.phone}}</text>
 			</view>
 			<view v-if="item.keycode" class="pwb-row">
-				<text class="pwb-label">KeyCode</text>
-				<text class="pwb-value">{{item.keycode}}</text>
+				<text class="pwb-label" :style="{ color: COLORS.DIS_TEXT}">KeyCode</text>
+				<text class="pwb-value" :style="{ color: COLORS.TEXT}">{{item.keycode}}</text>
 			</view>
 			<view v-if="item.meta" class="pwb-row pwb-row-note">
-				<text class="pwb-note">{{item.meta}}</text>
+				<text class="pwb-note" :style="{ color: COLORS.DIS_TEXT}">{{item.meta}}</text>
 			</view>
 		</view>
 	</view>
@@ -121,6 +126,7 @@
 <script>
 	import Utils from '@/js/Utils.js'
 	import PASSWORD_BOOK from '@/js/PasswordBook.js';
+	import COLORS from "@/js/Colors.js";
 
 	const RENDER_LIST = PASSWORD_BOOK.getRenderList();
 	const TEMP_PASSWORD = PASSWORD_BOOK.getTempPassword();
@@ -135,6 +141,7 @@
 				copy_mode: true,
 				RENDER_LIST,
 				TEMP_PASSWORD,
+				COLORS: COLORS,
 			}
 		},
 		methods: {
@@ -216,7 +223,6 @@
 </script>
 
 <style lang="scss">
-	$dis-text-color: #757575;
 	$topbar-height: 110rpx;
 	$pwb-box-height-off: 64rpx;
 	$pwb-box-height-on: 160rpx;
@@ -248,7 +254,6 @@
 		top: 100rpx;
 		right: 80rpx;
 		bottom: 100rpx;
-		background-color: #fff;
 		align-items: center;
 		justify-content: center;
 		box-shadow: 0 4rpx 6rpx rgba(0, 0, 0, 0.2);
@@ -260,8 +265,6 @@
 		align-items: center;
 		width: 100%;
 		height: $topbar-height;
-		background-color: #77aaff;
-		color: #ffffff;
 	}
 
 	.pwb-dl-bar-body {
@@ -293,12 +296,10 @@
 		border-radius: 28rpx;
 		font-size: 26rpx;
 		margin: auto 5rpx;
-		color: #2da7ff;
 	}
 
 	.pwb-btn-delete {
 		margin-right: auto;
-		color: #e64545;
 	}
 
 	.pwb-box {
@@ -306,7 +307,6 @@
 		width: 100%;
 		display: block;
 		height: $pwb-box-height-off;
-		background-color: #fff;
 		border-bottom: 1rpx solid #ddd;
 		transition: height 0.3s ease;
 	}
@@ -328,7 +328,6 @@
 		margin: 0 20rpx;
 		height: $pwb-box-height-off;
 		line-height: $pwb-box-height-off;
-		color: #2da7ff;
 		display: flex;
 		justify-content: right;
 		align-items: center;
@@ -375,7 +374,6 @@
 		left: calc(100% - 160rpx);
 		width: 110rpx;
 		height: 110rpx;
-		background-color: #77aaff;
 		box-shadow: 0 4rpx 6rpx rgba(0, 0, 0, 0.2);
 		z-index: 1;
 	}
@@ -383,7 +381,6 @@
 	.fixed-button-icon {
 		width: 105rpx;
 		height: 105rpx;
-		filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(233deg) brightness(106%) contrast(101%);
 	}
 
 	.pwb-list {
@@ -398,7 +395,6 @@
 	}
 
 	.pwb-item {
-		background-color: #ffffff;
 		border: 1rpx solid #e0e0e0;
 		margin-top: 24rpx;
 		padding: 20rpx 24rpx;
@@ -420,26 +416,22 @@
 	.pwb-label {
 		width: 120rpx;
 		font-size: 24rpx;
-		color: #666666;
 	}
 
 	.pwb-value {
 		flex: 1;
 		font-size: 26rpx;
-		color: #222222;
 		word-break: break-all;
 	}
 
 	.pwb-site {
 		font-size: 30rpx;
 		font-weight: bold;
-		color: #111111;
 	}
 
 	.pwb-app {
 		margin-left: 16rpx;
 		font-size: 22rpx;
-		color: #888888;
 	}
 
 	.pwb-row-note {
@@ -448,7 +440,6 @@
 
 	.pwb-note {
 		font-size: 24rpx;
-		color: #555555;
 	}
 
 	.pwb-item-empty {
@@ -456,13 +447,7 @@
 		padding: 48rpx 0;
 	}
 
-	.pwb-empty-text {
-		font-size: 26rpx;
-		color: #999999;
-	}
-
 	.pwb-dialog {
-		background-color: #ffffff;
 		width: 100%;
 		display: flex;
 		flex-direction: column;
@@ -478,12 +463,6 @@
 		margin-top: 20rpx;
 	}
 
-	.pwb-label {
-		font-size: 24rpx;
-		color: #666666;
-		margin-bottom: 8rpx;
-	}
-
 	.pwb-input {
 		height: 72rpx;
 		line-height: 72rpx;
@@ -491,8 +470,6 @@
 		padding: 0 16rpx;
 		border: 1rpx solid #cccccc;
 		font-size: 26rpx;
-		color: #222222;
-		background-color: #ffffff;
 	}
 
 	.pwb-length-box {
@@ -503,13 +480,11 @@
 		align-items: center;
 		margin-top: $pwb-box-height-off;
 		height: $pwb-length-box-height;
-		background-color: #fff;
 		border-top: 1rpx solid #ddd;
 		transition: margin-top 0.3s ease;
 	}
 
 	.pwb-length {
-		color: $dis-text-color;
 		font-size: 26rpx;
 	}
 

@@ -7,12 +7,12 @@
 				<text class="stat-line" :style="{ color: COLORS.SUB_ITEM}">故事数：{{RENDER_LIST.length}}</text>
 			</view>
 			<view class="line"></view>
-			<text class="viar-srh-title" :style="{ color: COLORS.DIS_TEXT}">搜索条件</text>
-			<view class="viar-srh-line" :style="{ color: COLORS.DIS_TEXT}" :class="{ 'viar-srh-line-on': VIAR_ON }">
+			<text class="viar-srh-title" :style="{ color: COLORS.BG_TEXT1}">搜索条件</text>
+			<view class="viar-srh-line" :style="{ color: COLORS.BG_TEXT1}" :class="{ 'viar-srh-line-on': VIAR_ON }">
 				<input v-model="SRH_TEXT" class="viar-srh-input" placeholder="搜索" />
 			</view>
-			<text class="viar-srh-title" :style="{ color: COLORS.DIS_TEXT}">Tags</text>
-			<view class="viar-srh-line" :style="{ color: COLORS.DIS_TEXT}" :class="{ 'viar-srh-line-on': VIAR_ON }">
+			<text class="viar-srh-title" :style="{ color: COLORS.BG_TEXT1}">Tags</text>
+			<view class="viar-srh-line" :style="{ color: COLORS.BG_TEXT1}" :class="{ 'viar-srh-line-on': VIAR_ON }">
 				<input v-model="srh_tag" class="viar-srh-input" placeholder="搜索" />
 				<text class="viar-status-btn" :style="{ color: COLORS.BTN_TEXT2}" @tap="srhTag()">搜索</text>
 			</view>
