@@ -50,9 +50,10 @@
 	import Nikkis from '../../js/Nikkis.js'
 	import Tekoki from '@/js/Tekoki.js'
 	import VIAR_TREE from '@/js/ViArTree.js'
+	import PASSWORD_BOOK from '@/js/PasswordBook.js';
 	import COLORS from "@/js/Colors.js";
 	const TNEME_NAMES = ["默认", "深色", "黑色", "暖黄", "浅绿", "灰蓝", "浅粉", "深蓝", "灰紫", "ACCEED"]
-	
+
 	let _theme_index = uni.getStorageSync("theme");
 	if (!_theme_index) {
 		_theme_index = 0;
@@ -63,6 +64,11 @@
 		_theme_index = TNEME_NAMES.length - 1;
 	}
 	const THIS_TNEME_INDEX = _theme_index;
+
+	let count_clear = 0;
+	setInterval(() => {
+		count_clear = 0;
+	}, 5000);
 
 	export default {
 		emits: ['page-mounted'],
@@ -94,7 +100,89 @@
 			exportPlainText() {
 				DataManager.exportFile(false);
 			},
-			exportDayOne() {},
+			exportDayOne() {
+				const file_name = `backup-one-day-${Date.now()}.json`;
+				const systemInfo = uni.getSystemInfoSync();
+				const result = {
+					metadata: {
+						version: "2023.25",
+						xya_info: "This is export from xya-nikki"
+					},
+					entries: []
+				};
+				const nikkis = Nikkis.getNikkiList();
+				for (const nikki of nikkis) {
+					const text = nikki.text;
+					let text_data = {
+						contents: [{
+							text: text
+						}],
+						meta: {
+							created: {
+								platform: "com.bloombuilt.dayone-android",
+								version: 407
+							},
+							"small-lines-removed": true,
+							version: 1
+						}
+					};
+					text_data = JSON.stringify(text_data);
+					const date = Utils.formatTimestampUTC(nikki.date);
+					const data = {
+						uuid: Utils.md5(text_data).toUpperCase(),
+						starred: false,
+						pinned: false,
+						text: text,
+						richText: text_data,
+						creationDate: date,
+						modifiedDate: date,
+						creationDevice: systemInfo.model || "",
+						creationOSName: systemInfo.osName || "",
+						creationOSVersion: systemInfo.osVersion || "",
+						creationDeviceType: systemInfo.deviceBrand || "",
+						timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+						v: {}
+					};
+					result.entries.push(data);
+				}
+				console.log(JSON.stringify(result));
+				if (process.env.UNI_PLATFORM === 'h5') {
+					const jsonStr = JSON.stringify(result);
+					const blob = new Blob([jsonStr], {
+						type: 'application/json;charset=utf-8'
+					});
+					const url = URL.createObjectURL(blob);
+					const a = document.createElement('a');
+					a.href = url;
+					a.download = file_name;
+					document.body.appendChild(a);
+					a.click();
+					document.body.removeChild(a);
+					URL.revokeObjectURL(url);
+					return;
+				}
+				if (process.env.UNI_PLATFORM === 'app') {
+					const jsonStr = JSON.stringify(result);
+					const fileName = file_name;
+					const main = plus.android.runtimeMainActivity();
+					const Context = plus.android.importClass('android.content.Context');
+					const File = plus.android.importClass('java.io.File');
+					const FileOutputStream = plus.android.importClass('java.io.FileOutputStream');
+					const StringClass = plus.android.importClass('java.lang.String');
+					const dir = main.getExternalFilesDir(null);
+					const file = new File(dir, fileName);
+					const fos = new FileOutputStream(file);
+					const javaStr = new StringClass(jsonStr);
+					fos.write(javaStr.getBytes('UTF-8'));
+					fos.close();
+					const path = file.getAbsolutePath();
+					uni.showToast({
+						title: `导出成功: ${path}`,
+						icon: 'none'
+					});
+					DataManager.shareFile(path);
+				}
+			},
 			checkDiaryTime() {
 				Nikkis.checkNikkiTime().save();
 				uni.showToast({
@@ -119,8 +207,38 @@
 			},
 			rebuildHierarchy() {},
 			rebuildLinks() {},
-			deletePassword() {},
-			clearData() {},
+			deletePassword() {
+				Utils.switchPage("setpassword", "删除密码", true);
+				uni.showToast({
+					title: `输入旧密码删除密码`,
+					icon: 'none'
+				});
+			},
+			clearData() {
+				if (count_clear < 10) {
+					count_clear++;
+					uni.showToast({
+						title: `请连续点击${10-count_clear}次清除所有数据`,
+						icon: 'none'
+					});
+				} else {
+					count_clear = 0;
+					uni.clearStorageSync();
+					if (process.env.UNI_PLATFORM === 'h5') {
+						window.location.reload();
+					}
+					const sys = uni.getSystemInfoSync();
+					if ((sys.platform === 'android' || sys.platform === 'ios') && typeof plus !==
+						'undefined' && plus
+						.runtime) {
+						plus.runtime.quit();
+					}
+					uni.showToast({
+						title: `已删除`,
+						icon: 'none'
+					});
+				}
+			},
 			setSubPassword() {},
 			github() {
 				const url = "https://github.com/xyazh/xya-nikki-diary-uniapp";

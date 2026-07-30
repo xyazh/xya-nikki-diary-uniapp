@@ -34,6 +34,10 @@ const ViArTree = function() {
 	this.srhing_code = 0;
 	this.last_page = [];
 
+	this._getDataManager = () => {
+		return DM;
+	}
+
 	this.renderTagsIdentity = () => {
 		Utils.clearObj(RENDER_TAGS);
 		Object.assign(RENDER_TAGS, this.tags);
@@ -63,8 +67,8 @@ const ViArTree = function() {
 	this.getTempViar = () => {
 		return TEMP_VIAR;
 	}
-	
-	this.getViarOn = () =>{
+
+	this.getViarOn = () => {
 		return VIAR_ON;
 	}
 
@@ -365,9 +369,9 @@ const ViArTree = function() {
 
 	this.exportFile = () => {
 		const node_save_map = {
-			node_map:{},
-			root:this._root.save(),
-			tags:Object.keys(TAGS),
+			node_map: {},
+			root: this._root.save(),
+			tags: Object.keys(TAGS),
 		};
 		for (var node_id in this.node_map) {
 			var node = this.node_map[node_id];

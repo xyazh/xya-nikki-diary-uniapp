@@ -14,6 +14,10 @@ const DM = new DataManager("nikkis");
 
 
 class Nikkis {
+	static _getDataManager(){
+		return DM;
+	}
+	
 	static loadData() {
 		DM.load();
 		var nikki_list = DM.get("nikki_list", []);

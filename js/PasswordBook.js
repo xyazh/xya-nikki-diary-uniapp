@@ -23,6 +23,10 @@ const TEMP_PASSWORD = reactive({
 const PASSWORD_LIST = [];
 
 class PasswordBook {
+	_getDataManager(){
+		return DM;
+	}
+	
 	getRenderList() {
 		return RENDER_LIST;
 	}

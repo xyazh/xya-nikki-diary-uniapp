@@ -39,6 +39,10 @@ for (let i = 1; i <= 42; i++) {
 
 
 class Tekoki {
+	static _getDataManager(){
+		return DM;
+	}
+	
 	static loadData() {
 		DM.load();
 		var tekokis = DM.get("tekokis", null);

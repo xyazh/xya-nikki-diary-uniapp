@@ -21,7 +21,6 @@
 			<view class="page-content">
 				<component :is="currentPage" @page-mounted="onPageMounted"></component>
 			</view>
-
 			<view class="overlay" :class="{ 'overlay-show': sidebarVisible }" @click="closeSidebar">
 			</view>
 			<view class="sidebar"  :class="{ 'sidebar-open': sidebarVisible }" :style="{ backgroundColor: COLORS.BG}">
@@ -268,16 +267,11 @@
 						}
 						return;
 					}
-					this.currentPage = item.key;
 					this.title = item.title;
+					this.currentPage = item.key;
 
 					if (process.env.UNI_PLATFORM === 'h5') {
 						location.hash = `#${item.key}`;
-					} else {
-						Utils.page_stack.push({
-							key: this.currentPage,
-							title: this.title
-						});
 					}
 				}, 150);
 			},
@@ -286,7 +280,9 @@
 				for (let item of this.sidebaItems) {
 					if (item.key == "setpassword") {
 						item.title = DataManager.hasPassword() ? "修改密码" : "创建密码";
-						this.title = item.title;
+						if(!flag){
+							this.title = item.title;
+						}
 						return;
 					}
 				}

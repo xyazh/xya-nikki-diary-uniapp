@@ -7,23 +7,23 @@
 				<view class="stpw-error-icon-off" :class="{ 'stpw-error-icon-on': err0 }">!</view>
 			</view>
 		</view>
-		<view class="stpw-error-text-off" :class="{ 'stpw-error-text-on': err0 }">{{err0}}</view>
-		<view class="stpw-inline">
+		<view v-if="has_password" class="stpw-error-text-off" :class="{ 'stpw-error-text-on': err0 }">{{err0}}</view>
+		<view v-if="!del_mode" class="stpw-inline">
 			<text class="stpw-text" :style="{ color: COLORS.BG_TEXT1}">密码:</text>
 			<view class="stpw-input-warp" :style="{ color: COLORS.BG_TEXT1}" :class="{ 'stpw-input-error': err1 }">
 				<input password v-model="password1" class="stpw-input" placeholder="请输入密码(留空删除密码)" @input="err1 = ''" />
 				<view class="stpw-error-icon-off" :class="{ 'stpw-error-icon-on': err1 }">!</view>
 			</view>
 		</view>
-		<view class="stpw-error-text-off" :class="{ 'stpw-error-text-on': err1 }">{{err1}}</view>
-		<view class="stpw-inline">
+		<view v-if="!del_mode" class="stpw-error-text-off" :class="{ 'stpw-error-text-on': err1 }">{{err1}}</view>
+		<view v-if="!del_mode" class="stpw-inline">
 			<text class="stpw-text" :style="{ color: COLORS.BG_TEXT1}">确认密码:</text>
 			<view class="stpw-input-warp" :style="{ color: COLORS.BG_TEXT1}" :class="{ 'stpw-input-error': err2 }">
 				<input password v-model="password2" class="stpw-input" placeholder="请输入密码(留空删除密码)" @input="err2 = ''" />
 				<view class="stpw-error-icon-off" :class="{ 'stpw-error-icon-on': err2 }">!</view>
 			</view>
 		</view>
-		<view class="stpw-error-text-off" :class="{ 'stpw-error-text-on': err2 }">{{err2}}</view>
+		<view v-if="!del_mode" class="stpw-error-text-off" :class="{ 'stpw-error-text-on': err2 }">{{err2}}</view>
 		<button class="stpw-ok-btn" :style="{ backgroundColor: COLORS.BTN_BG1, color: COLORS.BTN_TEXT1}" type="primary"
 			@click="setPassword()">确认</button>
 	</view>
@@ -46,6 +46,7 @@
 				err1: "",
 				err2: "",
 				COLORS: COLORS,
+				del_mode: false,
 			}
 		},
 		methods: {
@@ -80,9 +81,16 @@
 					icon: "none"
 				});
 			},
+			checkDelMode() {
+				if(Utils.page_arg["setpassword"]){
+					this.del_mode = true;
+				}
+				Utils.page_arg["setpassword"] = undefined;
+			},
 		},
 		mounted() {
 			this.$emit('page-mounted');
+			this.checkDelMode();
 		},
 		unmounted() {},
 	}

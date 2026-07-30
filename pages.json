@@ -6,6 +6,13 @@
 				"navigationBarTitleText": "uni-app",
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/index/empty",
+			"style": {
+				"navigationBarTitleText": "uni-app",
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {
