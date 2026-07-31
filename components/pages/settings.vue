@@ -145,7 +145,6 @@
 					};
 					result.entries.push(data);
 				}
-				console.log(JSON.stringify(result));
 				if (process.env.UNI_PLATFORM === 'h5') {
 					const jsonStr = JSON.stringify(result);
 					const blob = new Blob([jsonStr], {

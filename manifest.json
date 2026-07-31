@@ -2,12 +2,12 @@
     "name" : "xya日记",
     "appid" : "__UNI__E2CB7D1",
     "description" : "xya-nikki-diary",
-    "versionName" : "1.0.3",
-    "versionCode" : 103,
+    "versionName" : "1.0.4",
+    "versionCode" : 104,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
-		"darkmode" : true,
+        "darkmode" : true,
         "usingComponents" : true,
         "nvueStyleCompiler" : "uni-app",
         "compilerVersion" : 3,

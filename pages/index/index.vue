@@ -269,10 +269,6 @@
 					}
 					this.title = item.title;
 					this.currentPage = item.key;
-
-					if (process.env.UNI_PLATFORM === 'h5') {
-						location.hash = `#${item.key}`;
-					}
 				}, 150);
 			},
 
