@@ -54,7 +54,6 @@
 				this.err0 = "";
 				this.err1 = "";
 				this.err2 = "";
-
 				if (this.has_password) {
 					if (!this.password0) {
 						this.err0 = "请输入旧密码";
@@ -75,14 +74,17 @@
 				this.password2 = "";
 				this.has_password = DataManager.hasPassword();
 				Utils.updateSetPassword();
-				Utils.switchPage("home", "主页");
+				Utils.switchPage(
+					"home",
+					"主页"
+				);
 				uni.showToast({
 					title: "密码修改成功",
 					icon: "none"
 				});
 			},
 			checkDelMode() {
-				if(Utils.page_arg["setpassword"]){
+				if (Utils.page_arg["setpassword"]) {
 					this.del_mode = true;
 				}
 				Utils.page_arg["setpassword"] = undefined;

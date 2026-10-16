@@ -22,7 +22,7 @@ class Nikkis {
 		DM.load();
 		var nikki_list = DM.get("nikki_list", []);
 		NIKKI_LIST.push(...nikki_list);
-		Nikkis.sort()
+		Nikkis.checkNikkiTime()
 			.countAllText();
 	}
 
@@ -32,7 +32,7 @@ class Nikkis {
 			return;
 		}
 		Nikkis.reset(out_nikki)
-			.sort()
+			.checkNikkiTime()
 			.countAllText()
 			.save();
 	}
@@ -162,10 +162,10 @@ class Nikkis {
 				if (item.day == times.day) {
 					n += 500;
 				}
-				if (item.hours == times.hour) {
+				if (times.hour != null && Number(item.hours) == Number(times.hour)) {
 					n += 500;
 				}
-				if (item.minu == times.minute) {
+				if (times.minute != null && Number(item.minu) == Number(times.minute)) {
 					n += 500;
 				}
 			}

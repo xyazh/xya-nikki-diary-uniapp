@@ -13,9 +13,9 @@
 			<view class="card-content">
 				<!-- 左侧日期 -->
 				<view class="date-box">
-					<text class="day" :style="{ color: COLORS.DIS_TEXT}">{{Utils.read_nikki.day}}</text>
+					<text class="day" :style="{ color: COLORS.DIS_TEXT}">{{Utils.addZero(Utils.read_nikki.day)}}</text>
 					<br>
-					<text class="month-week" :style="{ color: COLORS.DIS_TEXT}">{{Utils.read_nikki.month}}月
+					<text class="month-week" :style="{ color: COLORS.DIS_TEXT}">{{Utils.addZero(Utils.read_nikki.month)}}月
 						{{Utils.read_nikki.week}}</text>
 				</view>
 				<!-- 右侧内容 -->

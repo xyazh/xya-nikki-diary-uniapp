@@ -23,13 +23,14 @@
 			</view>
 			<view class="overlay" :class="{ 'overlay-show': sidebarVisible }" @click="closeSidebar">
 			</view>
-			<view class="sidebar"  :class="{ 'sidebar-open': sidebarVisible }" :style="{ backgroundColor: COLORS.BG}">
+			<view class="sidebar" :class="{ 'sidebar-open': sidebarVisible }" :style="{ backgroundColor: COLORS.BG}">
 				<view class="sidebar-block" :style="{ backgroundColor: COLORS.MAIN}">
 				</view>
 				<scroll-view scroll-y="true" class="sidebar-scroll-view" show-scrollbar="false">
 					<view class="sidebar-list-item" v-for="item in sidebaItems" :key="item.key"
 						@click="switchPage(item)">
-						<image :src="item.icon" class="sidebar-item-icon" :style="{filter: COLORS.IMGF}" mode="widthFix"></image>
+						<image :src="item.icon" class="sidebar-item-icon" :style="{filter: COLORS.IMGF}"
+							mode="widthFix"></image>
 						<text class="sidebar-item-text" :style="{ color: COLORS.BG_TEXT1}">{{item.title}}</text>
 					</view>
 				</scroll-view>
@@ -192,13 +193,15 @@
 				this.sidebarVisible = false;
 			},
 			inptConfirm() {
-				let ok = DataManager.checkPassword(this.password);
+				const ok = DataManager.checkPassword(this.password);
 				if (ok) {
+					DataManager.raw_password = this.password;
 					DataManager.password = Utils.md5(this.password);
 					for (let fuc of DataManager.ON_LOAD) {
 						fuc();
 					}
 					DataManager.ON_LOAD = null;
+					this.password = "";
 					this.showMask = false;
 					uni.showToast({
 						title: "密码正确",
@@ -276,7 +279,7 @@
 				for (let item of this.sidebaItems) {
 					if (item.key == "setpassword") {
 						item.title = DataManager.hasPassword() ? "修改密码" : "创建密码";
-						if(!flag){
+						if (!flag) {
 							this.title = item.title;
 						}
 						return;
@@ -311,7 +314,7 @@
 			Utils.registerUpdateSetPassword(this.updateSetPassword);
 			if (process.env.UNI_PLATFORM === 'h5') {
 				if (!location.hash) {
-					location.hash = `#${item.key}`;
+					location.hash = `#${this.currentPage}`;
 				}
 				window.addEventListener('hashchange', this.onHashchange);
 			}

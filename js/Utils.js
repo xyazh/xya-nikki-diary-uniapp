@@ -14,9 +14,9 @@ let _UPDATE_SET_PASSWORD = null;
 Utils.version = version;
 Utils.read_nikki = {};
 Utils.temp_nikki = reactive({
-	year: "1970",
-	month: "1",
-	day: "1",
+	year: 1970,
+	month: 1,
+	day: 1,
 	hours: "08",
 	minu: "00",
 	week: "周四",
@@ -27,6 +27,8 @@ Utils.temp_nikki = reactive({
 });
 
 Utils.page_arg = {};
+
+Utils.PASSWORD_KDF_ITERATIONS = 20000;
 
 Utils.copyObj = function(obj) {
 	let new_obj = JSON.parse(JSON.stringify(obj));
@@ -99,6 +101,112 @@ Utils.encrypt = function(data, pw) {
 		padding: CryptoJS.pad.Pkcs7
 	})
 	return encrypted.toString()
+}
+
+Utils.deriveKeysV2 = function(password, salt, iterations = Utils.PASSWORD_KDF_ITERATIONS) {
+	const derived = CryptoJS.PBKDF2(password, salt, {
+		keySize: 512 / 32,
+		iterations: iterations,
+		hasher: CryptoJS.algo.SHA256
+	});
+	const encryptionKey = CryptoJS.lib.WordArray.create(
+		derived.words.slice(0, 8),
+		32
+	);
+	const macKey = CryptoJS.lib.WordArray.create(
+		derived.words.slice(8, 16),
+		32
+	);
+	return {
+		encryptionKey,
+		macKey
+	};
+};
+
+Utils.encryptV2 = function(data, rawPassword) {
+	const iterations = Utils.PASSWORD_KDF_ITERATIONS;
+	const salt = CryptoJS.lib.WordArray.random(16);
+	const iv = CryptoJS.lib.WordArray.random(16);
+	const {
+		encryptionKey,
+		macKey
+	} = Utils.deriveKeysV2(
+		rawPassword,
+		salt,
+		iterations
+	);
+	const encrypted = CryptoJS.AES.encrypt(
+		data,
+		encryptionKey, {
+			iv: iv,
+			mode: CryptoJS.mode.CBC,
+			padding: CryptoJS.pad.Pkcs7
+		}
+	);
+	const ciphertext = encrypted.ciphertext;
+	const macData = iv.clone().concat(ciphertext);
+	const mac = CryptoJS.HmacSHA256(
+		macData,
+		macKey
+	);
+	return {
+		crypt_version: 2,
+		kdf: "PBKDF2-SHA256",
+		iterations: iterations,
+		salt: salt.toString(CryptoJS.enc.Base64),
+		iv: iv.toString(CryptoJS.enc.Base64),
+		data: ciphertext.toString(CryptoJS.enc.Base64),
+		mac: mac.toString(CryptoJS.enc.Base64)
+	};
+};
+
+Utils.decryptV2 = function(allData, rawPassword) {
+	try {
+		const iterations = allData.iterations || Utils.PASSWORD_KDF_ITERATIONS;
+		const salt = CryptoJS.enc.Base64.parse(allData.salt);
+		const iv = CryptoJS.enc.Base64.parse(allData.iv);
+		const ciphertext = CryptoJS.enc.Base64.parse(allData.data);
+		const expectedMac = CryptoJS.enc.Base64.parse(allData.mac);
+		const {
+			encryptionKey,
+			macKey
+		} = Utils.deriveKeysV2(rawPassword, salt, iterations);
+		const macData = iv.clone().concat(ciphertext);
+		const actualMac = CryptoJS.HmacSHA256(macData, macKey);
+		if (!Utils.constantTimeEqual(actualMac, expectedMac)) {
+			return null;
+		}
+		const cipherParams = CryptoJS.lib.CipherParams.create({
+			ciphertext: ciphertext
+		});
+		const decrypted = CryptoJS.AES.decrypt(cipherParams, encryptionKey, {
+			iv: iv,
+			mode: CryptoJS.mode.CBC,
+			padding: CryptoJS.pad.Pkcs7
+		});
+		return decrypted.toString(CryptoJS.enc.Utf8);
+	} catch (e) {
+		console.error("V2 解密失败:", e);
+		return null;
+	}
+};
+
+Utils.constantTimeEqual = function(a, b) {
+	if (a.sigBytes !== b.sigBytes) {
+		return false;
+	}
+	let diff = 0;
+	for (let i = 0; i < a.sigBytes; i++) {
+		const shift = 24 - (i % 4) * 8;
+		const aByte = (a.words[i >>> 2] >>> shift) & 0xff;
+		const bByte = (b.words[i >>> 2] >>> shift) & 0xff;
+		diff |= aByte ^ bByte;
+	}
+	return diff === 0;
+};
+
+Utils.salt = function() {
+	return CryptoJS.lib.WordArray.random(16).toString();
 }
 
 Utils.addZero = function(num) {

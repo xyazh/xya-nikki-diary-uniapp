@@ -94,12 +94,7 @@ const ViArTree = function() {
 	}
 
 	this.clearRenderList = () => {
-		if (RENDER_LIST.length > 1) {
-			RENDER_LIST.length = 1;
-		}
-		if (RENDER_LIST.length = 1) {
-			RENDER_LIST.pop();
-		}
+		RENDER_LIST.length = 0;
 	}
 
 

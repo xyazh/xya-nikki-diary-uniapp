@@ -8,9 +8,9 @@
 	<view class="divider"></view>
 	<view class="datetime-row">
 		<!-- 日期 -->
-		<picker mode="date" value="{{`${tn.year}-${tn.month}-${tn.day}`}}" @change="onDateChange">
+		<picker mode="date" value="{{`${tn.year}-${Utils.addZero(tn.month)}-${Utils.addZero(tn.day)}`}}" @change="onDateChange">
 			<view class="dt-btn" :style="{ backgroundColor: COLORS.BTN_BG3, color: COLORS.BTN_TEXT3}">
-				{{`${tn.year}-${tn.month}-${tn.day}`}}</view>
+				{{`${tn.year}-${Utils.addZero(tn.month)}-${Utils.addZero(tn.day)}`}}</view>
 		</picker>
 
 		<!-- 时间 -->
@@ -44,7 +44,7 @@
 		methods: {
 			onDateChange(e) {
 				if (!e.detail?.value) return
-				const [y, m, d] = e.detail.value.split('-');
+				const [y, m, d] = e.detail.value.split('-').map(Number);
 				let tn = this.tn;
 				Object.assign(tn, {
 					year: y,
@@ -108,9 +108,9 @@
 				tn.date = now.getTime();
 				tn.id = tn.date;
 
-				tn.year = now.getFullYear().toString();
-				tn.month = (now.getMonth() + 1).toString().padStart(2, '0');
-				tn.day = now.getDate().toString().padStart(2, '0');
+				tn.year = now.getFullYear();
+				tn.month = now.getMonth() + 1;
+				tn.day = now.getDate();
 
 				tn.hours = now.getHours().toString().padStart(2, '0');
 				tn.minu = now.getMinutes().toString().padStart(2, '0');

@@ -69,8 +69,7 @@
 		</view>
 		<view class="calendar">
 			<view v-for="d in TEKOKI_TABLE" :key="d.id" class="calendar-day" @click="openDl2(d)">
-				<view class="calendar-day-bg" :style="{ '--rate': d.rate, backgroundColor: COLORS.MAIN }"
-					v-show="d.rate > 0"></view>
+				<view class="calendar-day-bg" :style="{ '--rate': d.rate, backgroundColor: COLORS.MAIN }"></view>
 				<text class="calendar-day-text" :style="{ color: COLORS.DIS_TEXT}">{{ d.day }}</text>
 			</view>
 		</view>
@@ -500,7 +499,7 @@
 		position: absolute;
 		bottom: 0;
 		width: 48rpx;
-		height: max(calc(var(--rate) * 100%), 1rpx);
+		height: calc(var(--rate) * 100%);
 		background-color: #77aaff;
 		transition: height 0.3s ease;
 	}

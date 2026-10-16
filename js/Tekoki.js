@@ -39,10 +39,10 @@ for (let i = 1; i <= 42; i++) {
 
 
 class Tekoki {
-	static _getDataManager(){
+	static _getDataManager() {
 		return DM;
 	}
-	
+
 	static loadData() {
 		DM.load();
 		var tekokis = DM.get("tekokis", null);
@@ -56,7 +56,7 @@ class Tekoki {
 
 	static importFile(data) {
 		let out_tekoki = data.out_tekoki;
-		if(!out_tekoki){
+		if (!out_tekoki) {
 			return;
 		}
 		TEKOKIS.data = out_tekoki.data;
@@ -64,8 +64,8 @@ class Tekoki {
 		Tekoki.setTekokikEvents(out_tekoki.events);
 		Tekoki.save();
 	}
-	
-	static exportFile(){
+
+	static exportFile() {
 		const data = {};
 		data.out_tekoki = {};
 		data.out_tekoki.data = TEKOKIS.data;
@@ -215,6 +215,7 @@ class Tekoki {
 			slot.day = day;
 			const value = events[day] || 0;
 			slot.rate = max > 0 ? value / max : 0;
+			slot.rate = slot.rate > 0 && slot.rate < 0.01 ? 0.01 : slot.rate;
 			slot.count = value;
 		}
 		Tekoki.stat1(event_name, year, month);

@@ -34,9 +34,9 @@
 			:key="item.id" @tap="openItem(item)">
 			<view class="card-content">
 				<view class="date-box">
-					<text class="day" :style="{ color: COLORS.DIS_TEXT}">{{item.day}}</text>
+					<text class="day" :style="{ color: COLORS.DIS_TEXT}">{{Utils.addZero(item.day)}}</text>
 					<br>
-					<text class="month-week" :style="{ color: COLORS.DIS_TEXT}">{{item.month}}月 {{item.week}}</text>
+					<text class="month-week" :style="{ color: COLORS.DIS_TEXT}">{{Utils.addZero(item.month)}}月 {{item.week}}</text>
 				</view>
 				<view class="content-box">
 					<text class="year" :style="{ color: COLORS.DIS_TEXT}"
@@ -56,9 +56,9 @@
 			<view class="card-content">
 				<!-- 左侧日期 -->
 				<view class="date-box">
-					<text class="day" :style="{ color: COLORS.DIS_TEXT}">{{item.day}}</text>
+					<text class="day" :style="{ color: COLORS.DIS_TEXT}">{{Utils.addZero(item.day)}}</text>
 					<br>
-					<text class="month-week" :style="{ color: COLORS.DIS_TEXT}">{{item.month}}月 {{item.week}}</text>
+					<text class="month-week" :style="{ color: COLORS.DIS_TEXT}">{{Utils.addZero(item.month)}}月 {{item.week}}</text>
 				</view>
 				<!-- 右侧内容 -->
 				<view class="content-box">
